@@ -60,14 +60,16 @@ Software-ul oferă o interfață simplă și funcțională:
 | **#WE** | A3 | D7 | Write Enable (LOW) |
 
 ### Magistrală Date (MCP23017 / MCP23S17)
-* **SPI:** 
-| (MCP23S17)    |       Arduino | 
+
+| (MCP23S17)    |       Arduino |
+|     :---      |      :---     |
 | pin #11 (CS)  | SPI CS   (10) |
 | pin #12 (SCK) | SPI SCK  (13) |
 | pin #13 (SI)  | SPI MOSI (11) |
 | pin #14 (SO)  | SPI MISO (12) |
-* **I2C:** 
+
 | (MCP23017)    | Arduino(ESP8266) |
+|     :---      |       :---       |
 | pin #12 (SCL) |  A5   (D2 ESP)   |
 | pin #13 (SDA) |  A4   (D1 ESP)   |
 
