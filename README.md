@@ -84,7 +84,7 @@
 
 ## 📦 Релизы и софт / Lansări și software
 
-* **ПО для Windows:** В разделе **[Releases](../../releases/latest)** доступна для [скачивания управляющая программа](releases/tag/v2.0.4/16BitFlash_Programmer_v2.0.4.7z) в архиве **`16BitFlash_Programmer_v2.0.4.7z `** , а также исходный код проекта.
+* **ПО для Windows:** В разделе **[Releases](../../releases/latest)** доступна для [скачивания управляющая программа]([releases/tag/v2.0.4/16BitFlash_Programmer_v2.0.4.7z](https://github.com/Pushkash083/16BitFlash_Programmer/releases/download/v2.0.4/16BitFlash_Programmer_v2.0.4.7z)) в архиве **`16BitFlash_Programmer_v2.0.4.7z `** , а также исходный код проекта.
 
 ---
 
