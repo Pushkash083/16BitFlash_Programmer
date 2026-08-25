@@ -84,6 +84,12 @@ Programator bazat pe **Arduino NANO** (sau ESP8266) și **Qt 6 C++** pentru cipu
 
 ---
 
+## 📦 Релизы и софт / Lansări și software
+
+* **Software pentru Windows:** În secțiunea **[Releases](../../releases/latest)** este disponibil pentru descărcare utilitarul de control în arhiva **`16BitFlash_Programmer_v2.0.4.7z`**, precum și codul sursă.
+
+---
+
 ## 👨‍💻 Autori
 
 * **Dezvoltator:** Pushkash
