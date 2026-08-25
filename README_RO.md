@@ -14,12 +14,13 @@ Programator bazat pe **Arduino NANO** (sau ESP8266) și **Qt 6 C++** pentru cipu
 
 ## 🖥 Interfață și Funcții
 
-Software-ul oferă o interfață simplă și funcțională:
+![Software-ul oferă o interfață simplă și funcțională:]Hardware/Interface.png)
+
 
 * **Monitorizare:** Cronometru LCD și consolă pentru jurnale (loguri).
 * **Selecție ROM:** Dimensiuni fixe (512 KB – 8 MB), `TEST 32KB` (test rapid) și modul inteligent `Auto ROM Select`.
 * **Vizualizator Hex:** Fereastră integrată pentru vizualizarea memoriei (`Show buffer`) pe 16 coloane.
-* **Operațiuni principale:** Citire (`Read`), Scriere (`Write`), Ștergere (`Erase`), Verificare (`Verify`).
+* **Operațiuni principale:** Citire, Scriere, Ștergere, Verificare.
 
 ---
 
@@ -38,8 +39,8 @@ Software-ul oferă o interfață simplă și funcțională:
 ## 🛠 Hardware (Componente Hardware)
 
 În depozit (repository) sunt incluse fișierele pentru asamblarea proprie a dispozitivului:
-* **Schema:** Schema electrică principială a programatorului.
-* **Fișiere Gerber:** Fișiere gata pregătite pentru comandarea cablajului imprimat (PCB) la fabrică.
+* **[Schema programatorului (PDF)](Hardware/Schematic_ProgramatorLV_2.pdf)** — Schema electrică principială în format PDF.
+* **[Gerber:](Hardware/Gerber_PCB_2024-07-12.zip)** — Fișiere Gerber gata pentru fabricarea cablajului imprimat (PCB).
 
 ---
 
