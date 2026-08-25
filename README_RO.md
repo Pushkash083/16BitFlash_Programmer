@@ -90,7 +90,7 @@ Programator bazat pe **Arduino NANO** (sau ESP8266) și **Qt 6 C++** pentru cipu
 
 ---
 
-## 👨‍💻 Autori
+## 👨‍💻 Autor
 
 * **Dezvoltator:** Pushkash
 * **Asistent AI:** Gemini
