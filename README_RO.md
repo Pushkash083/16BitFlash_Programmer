@@ -14,7 +14,7 @@ Programator bazat pe **Arduino NANO** (sau ESP8266) și **Qt 6 C++** pentru cipu
 
 ## 🖥 Interfață și Funcții
 
-![Software-ul oferă o interfață simplă și funcțională:]Hardware/Interface.png)
+![Software-ul oferă o interfață simplă și funcțională:](Hardware/Interface.png)
 
 
 * **Monitorizare:** Cronometru LCD și consolă pentru jurnale (loguri).
