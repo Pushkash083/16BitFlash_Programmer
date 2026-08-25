@@ -120,7 +120,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>    4Mb</string>
+      <string>    4MB</string>
      </property>
     </widget>
     <widget class="QRadioButton" name="c512Button">
@@ -136,7 +136,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>    8Mb</string>
+      <string>    8MB</string>
      </property>
     </widget>
     <widget class="QRadioButton" name="c32Button">
