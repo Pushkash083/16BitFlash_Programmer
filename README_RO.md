@@ -85,7 +85,7 @@ Programator bazat pe **Arduino NANO** (sau ESP8266) și **Qt 6 C++** pentru cipu
 ## 🛠 Hardware (Componente Hardware)
 
 În depozit (repository) sunt incluse fișierele pentru asamblarea proprie a dispozitivului:
-* **[Schema programatorului (PDF)](Hardware/Schematic_ProgramatorLV_2024-07-12.pdf)** — Schema electrică principială în format PDF.
+* **[Schema programatorului (PDF)](Hardware)** — Schema electrică principială în format PDF.
 * **[Gerber:](Hardware)** — Fișiere Gerber gata pentru fabricarea cablajului imprimat (PCB).
 
 ---
