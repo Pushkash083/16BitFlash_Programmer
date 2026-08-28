@@ -26,7 +26,7 @@ Programator bazat pe **Arduino NANO** (sau ESP8266) și **Qt 6 C++** pentru cipu
 
 ## 🌟 Funcționalități Cheie
 
-* **Auto ROM Select Inteligent:** Detectează automat dimensiunea fișierului. Dacă se potrivește cu un preset standard, selectează opțiunea; dacă nu, transmite microcontrolerului adresa finală exactă. Pentru dimensiuni mai mari de 4 MB (8 MB și 16 MB) este necesară lipirea liniilor de adresă $A21/A22 \to A22/A23$.
+* **Auto ROM Select Inteligent:** Detectează automat dimensiunea fișierului. Dacă se potrivește cu un preset standard, selectează opțiunea; dacă nu, transmite microcontrolerului adresa finală exactă. Pentru dimensiuni mai mari de 4 MB (8 MB și 16 MB) este necesară lipirea liniilor de adresă $A21/A22$.
 * **Viteza de Lucru:** Citirea 1 MB durează ~3.2 min (32 KB în 6 sec). Din cauza limitărilor hardware ale plăcii Arduino Nano (16 MHz), protocolului UART și I2C, scrierea este lentă — ~30 min per 1 MB.
 * **Integrare Hardware:** Date pe 16 biți prin MCP23017 (I2C) / MCP23S17 (SPI), adrese prin registre 74HC595.
 * **Byte Swapping Bidirecțional:** Conversia MSB/LSB se face automat la citire și scriere. Fișierele `.bin`, `.gen`, `.md` sunt gata direct de utilizare.
