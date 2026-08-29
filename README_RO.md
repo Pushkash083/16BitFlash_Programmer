@@ -8,7 +8,7 @@
 
 > 💡 **Istoria proiectului:** Proiectul a fost conceput inițial ca un simplu experiment pentru a înțelege funcționarea portului COM, protocolului UART și transferului de date între PC și dispozitive externe, dar a evoluat într-un programator complet.
 
-Programator bazat pe microcontrollere **Raspberry Pi Pico (RP2040)**, **Arduino Nano** sau **ESP8266** și software de control în **Qt 6 C++** pentru citirea, scrierea, verificarea și ștergerea cipurilor Flash pe 16 biți (seriile **MX29LV, AM29F, ES29LV, HY29F, S29AL, S29GL** etc.) și a cartușelor **SEGA Mega Drive / Genesis**.
+Programator bazat pe microcontrollere **Raspberry Pi Pico (RP2040)** sau **Arduino Nano** și software de control în **Qt 6 C++** pentru citirea, scrierea, verificarea și ștergerea cipurilor Flash pe 16 biți (seriile **MX29LV, AM29F, ES29LV, HY29F, S29AL, S29GL** etc.) și a cartușelor **SEGA Mega Drive / Genesis**.
 
 ---
 
