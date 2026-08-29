@@ -59,8 +59,8 @@ Programator bazat pe microcontrollere **Raspberry Pi Pico (RP2040)**, **Arduino 
 | **#CE** | GP8 | D8 | D0 | Chip Enable (LOW) |
 | **#OE** | GP9 | D9 | D6 | Output Enable (LOW) |
 | **LED (W/R)** | GP20 | D7 | D2 | Indicator LED proces citire/scriere |
-| **#TIME** | GP21 | D5 | — | Rezervat: control bănci |
-| **#LWR** | GP22 | D6 | — | Rezervat: control bănci / scriere RAM |
+| **#TIME** | GP21 | D5 | — | Rezervat|
+| **#LWR** | GP22 | D6 | — | Rezervat|
 
 ### 3. Magistrală Date (MCP23S17 / MCP23017)
 
