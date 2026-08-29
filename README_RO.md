@@ -52,15 +52,16 @@ Programator bazat pe microcontrollere **Raspberry Pi Pico (RP2040)** sau **Ardui
 | **L_CLK (Latch)** | GP3 | A1 | D5 |
 | **S_CLK (Clock)** | GP6 | A2 | D3 |
 
-### 2. Linii Control Flash, Indicare și Control Bănci
-| Semnal | RP2040 (Pico) | Arduino Nano | ESP8266 | Descriere |
-| :--- | :--- | :--- | :--- | :--- |
-| **#WE** | GP7 | A3 | D7 | Write Enable (LOW) |
-| **#CE** | GP8 | D8 | D0 | Chip Enable (LOW) |
-| **#OE** | GP9 | D9 | D6 | Output Enable (LOW) |
-| **LED (W/R)** | GP20 | D7 | D2 | Indicator LED proces citire/scriere |
-| **#TIME** | GP21 | D5 | — | Rezervat|
-| **#LWR** | GP22 | D6 | — | Rezervat|
+### 2. Linii Control Flash, Indicare și Semnale Rezervate
+| Semnal | Slot (Pin) | RP2040 (Pico) | Arduino Nano | ESP8266 | Descriere |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **LED (W/R)** | — | GP20 | D7 | D2 | Indicator LED proces citire/scriere |
+| **#WE** | B30 | GP7 | A3 | D7 | Write Enable (LOW) |
+| **#CE** | B17 | GP8 | D8 | D0 | Chip Enable (LOW) |
+| **#OE** | B16 | GP9 | D9 | D6 | Output Enable (LOW) |
+| **#TIME** | B31 | GP21 | D5 | — | Rezervat|
+| **#LWR** | B28 | GP22 | D6 | — | Rezervat|
+| **#RST** | B27 | — | — | — | Linie de resetare (Reset) |
 
 ### 3. Magistrală Date (MCP23S17 / MCP23017)
 
