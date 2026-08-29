@@ -10,8 +10,6 @@
 // D10 -> SCS
 // D9  -> OE
 // D8  -> CE
-// D7  -> W/R (LED)
-// D2  -> AD2 (Program Supply(Vpp))
 // RESET  -> RST
 
 #include <SPI.h>
@@ -30,9 +28,9 @@ MCP23S17 mcp(MCP23S17_CS);
 #define shiftClockPin A2  // S_CLK
 
 /* Chip control из sketch_2.ino */
-#define chipEnable    8   // CE A5
-#define outputEnable  9    // OE A4
-#define WE           A3   // WE
+#define chipEnable    8    // CE 
+#define outputEnable  9    // OE 
+#define WE           A3    // WE
 
 typedef enum chipType {
   NONE = 0,

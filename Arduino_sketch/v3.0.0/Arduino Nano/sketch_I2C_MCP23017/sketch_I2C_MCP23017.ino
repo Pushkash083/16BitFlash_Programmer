@@ -1,3 +1,20 @@
+// A0  -> SER
+// A1  -> L_CLK
+// A2  -> S_CLK
+// A3  -> WE
+// A4  -> A4(SDA)
+// A5  -> A5(SCL)
+// D13 -> SSCK   |<-NC
+// D12 -> SMISO  |<-NC
+// D11 -> SMOSI  |<-NC
+// D10 -> SCS    |<-NC
+// D9  -> OE
+// D8  -> CE
+// D7  -> W/R(LED)
+// D6  -> LWR
+// D5  -> TIME
+// RESET  -> RST
+
 #include <Wire.h>
 #include <MCP23017.h>
 
@@ -5,14 +22,18 @@
 MCP23017 mcp = MCP23017(MCP23017_ADDR);
 
 /* 74HC595 control (address lines) */
-#define shiftDataPin  A0
-#define shiftLatchPin A1
-#define shiftClockPin A2
+#define shiftDataPin  A0  //A0
+#define shiftLatchPin A1  //A1
+#define shiftClockPin A2  //A2
 
 /* Chip control */
-#define chipEnable   8 
-#define outputEnable 9 
-#define WE           A3
+#define chipEnable   8    //D8
+#define outputEnable 9    //D9
+#define WE           A3   //A3
+
+#define LED_BUSY_PIN 7    // D7
+#define PIN_TIME     5    // D5
+#define PIN_LWR      6    // D6
 
 typedef enum chipType {
   NONE = 0,
@@ -71,10 +92,17 @@ void setup() {
   pinMode(WE,           OUTPUT);
   pinMode(chipEnable,   OUTPUT);
   pinMode(outputEnable, OUTPUT);
+  pinMode(LED_BUSY_PIN, OUTPUT);
+  pinMode(PIN_TIME, OUTPUT);
+  pinMode(PIN_LWR, OUTPUT);
 
   digitalWrite(WE, HIGH);
   digitalWrite(outputEnable, LOW);
   digitalWrite(chipEnable, HIGH);
+
+  digitalWrite(LED_BUSY_PIN, LOW);
+  digitalWrite(PIN_TIME, HIGH);
+  digitalWrite(PIN_LWR, HIGH);
 
   set_address(0x00000000);
   //read_mode();
@@ -96,6 +124,7 @@ void loop() {
       digitalWrite(WE, HIGH);
       digitalWrite(chipEnable, LOW);
       digitalWrite(outputEnable, LOW);
+      led_on();
 
       for (uint32_t i = start_address; i <= end_address; i++) {
         set_address(i);
@@ -111,6 +140,7 @@ void loop() {
       }
 
       digitalWrite(chipEnable, HIGH);
+      led_off();
       mode = WAIT;
       break;
     }
@@ -125,6 +155,7 @@ void loop() {
       digitalWrite(chipEnable, HIGH);
       digitalWrite(outputEnable, HIGH);
       digitalWrite(WE, HIGH);
+      led_on();
 
       ij = 0;
       while (ij <= end_address) {
@@ -144,6 +175,7 @@ void loop() {
       digitalWrite(chipEnable, HIGH);
       digitalWrite(outputEnable, LOW);
       read_mode();
+      led_off();
 
       mode = WAIT;
       break;
@@ -421,4 +453,22 @@ void Erase16BIT() {
   digitalWrite(chipEnable, HIGH);
 
   read_mode();
+}
+
+void led_on() {
+    digitalWrite(LED_BUSY_PIN, HIGH);
+}
+
+void led_off() {
+    digitalWrite(LED_BUSY_PIN, LOW);
+}
+
+// Дополнительно можно сделать функцию мигания при ошибке:
+void led_error_blink() {
+    for (int i = 0; i < 5; i++) {
+        led_on();
+        delay(100);
+        led_off();
+        delay(100);
+    }
 }

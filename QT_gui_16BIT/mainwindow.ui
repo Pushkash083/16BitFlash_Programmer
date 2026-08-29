@@ -50,7 +50,7 @@
     <property name="checkable">
      <bool>false</bool>
     </property>
-    <widget class="QRadioButton" name="c16Button">
+    <widget class="QRadioButton" name="KB32Button">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -75,7 +75,7 @@
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QRadioButton" name="c64Button">
+    <widget class="QRadioButton" name="MB1Button">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -91,7 +91,7 @@
       <string>    1MB</string>
      </property>
     </widget>
-    <widget class="QRadioButton" name="c128Button">
+    <widget class="QRadioButton" name="MB2Button">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -107,7 +107,7 @@
       <string>    2MB</string>
      </property>
     </widget>
-    <widget class="QRadioButton" name="c256Button">
+    <widget class="QRadioButton" name="MB4Button">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -123,7 +123,7 @@
       <string>    4MB</string>
      </property>
     </widget>
-    <widget class="QRadioButton" name="c512Button">
+    <widget class="QRadioButton" name="MB8Button">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -139,7 +139,7 @@
       <string>    8MB</string>
      </property>
     </widget>
-    <widget class="QRadioButton" name="c32Button">
+    <widget class="QRadioButton" name="KB512Button">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -155,7 +155,7 @@
       <string> 512KB</string>
      </property>
     </widget>
-    <widget class="QRadioButton" name="G3MbButton_2">
+    <widget class="QRadioButton" name="MB3Button">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -350,7 +350,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QPushButton" name="voltageChipButton">
+   <widget class="QPushButton" name="eraseChipButton">
     <property name="enabled">
      <bool>false</bool>
     </property>

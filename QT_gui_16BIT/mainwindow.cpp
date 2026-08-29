@@ -77,45 +77,45 @@ void MainWindow::log(const QString &str)
 
 void MainWindow::chipSelectSetEnabled(bool state)
 {
-    ui->c16Button->setEnabled(state);
-    ui->c32Button->setEnabled(state);
-    ui->c64Button->setEnabled(state);
-    ui->c128Button->setEnabled(state);
-    ui->G3MbButton_2->setEnabled(state);
-    ui->c256Button->setEnabled(state);
-    ui->c512Button->setEnabled(state);
+    ui->KB32Button->setEnabled(state);
+    ui->KB512Button->setEnabled(state);
+    ui->MB1Button->setEnabled(state);
+    ui->MB2Button->setEnabled(state);
+    ui->MB3Button->setEnabled(state);
+    ui->MB4Button->setEnabled(state);
+    ui->MB8Button->setEnabled(state);
     ui->autoRomButton->setEnabled(state);
 
-    ui->c16Button->setAutoExclusive(state);
-    ui->c32Button->setAutoExclusive(state);
-    ui->c64Button->setAutoExclusive(state);
-    ui->c128Button->setAutoExclusive(state);
-    ui->G3MbButton_2->setAutoExclusive(state);
-    ui->c256Button->setAutoExclusive(state);
-    ui->c512Button->setAutoExclusive(state);
+    ui->KB32Button->setAutoExclusive(state);
+    ui->KB512Button->setAutoExclusive(state);
+    ui->MB1Button->setAutoExclusive(state);
+    ui->MB2Button->setAutoExclusive(state);
+    ui->MB3Button->setAutoExclusive(state);
+    ui->MB4Button->setAutoExclusive(state);
+    ui->MB8Button->setAutoExclusive(state);
     ui->autoRomButton->setAutoExclusive(state);
 
     if (!state) {
-        ui->c16Button->setChecked(false);
-        ui->c32Button->setChecked(false);
-        ui->c64Button->setChecked(false);
-        ui->c128Button->setChecked(false);
-        ui->G3MbButton_2->setChecked(false);
-        ui->c256Button->setChecked(false);
-        ui->c512Button->setChecked(false);
+        ui->KB32Button->setChecked(false);
+        ui->KB512Button->setChecked(false);
+        ui->MB1Button->setChecked(false);
+        ui->MB2Button->setChecked(false);
+        ui->MB3Button->setChecked(false);
+        ui->MB4Button->setChecked(false);
+        ui->MB8Button->setChecked(false);
         ui->autoRomButton->setChecked(false);
     }
 }
 
 void MainWindow::chipSelectSetEnDes(bool state)
 {
-    ui->c16Button->setEnabled(state);
-    ui->c32Button->setEnabled(state);
-    ui->c64Button->setEnabled(state);
-    ui->c128Button->setEnabled(state);
-    ui->G3MbButton_2->setEnabled(state);
-    ui->c256Button->setEnabled(state);
-    ui->c512Button->setEnabled(state);
+    ui->KB32Button->setEnabled(state);
+    ui->KB512Button->setEnabled(state);
+    ui->MB1Button->setEnabled(state);
+    ui->MB2Button->setEnabled(state);
+    ui->MB3Button->setEnabled(state);
+    ui->MB4Button->setEnabled(state);
+    ui->MB8Button->setEnabled(state);
     ui->autoRomButton->setEnabled(state);
 }
 
@@ -151,6 +151,8 @@ void MainWindow::openSerialPort(const QString &path)
     serialPort->setPortName(path);
     serialPort->setBaudRate(QSerialPort::Baud115200);
     if (serialPort->open(QIODevice::ReadWrite)) {
+        serialPort->setDataTerminalReady(true);
+        serialPort->setRequestToSend(true);
         connect(serialPort, &QSerialPort::errorOccurred, this, &MainWindow::handleSerialError, Qt::UniqueConnection);
 
         writeData("p");
@@ -169,7 +171,7 @@ void MainWindow::openSerialPort(const QString &path)
                     ui->disconnectButton->setEnabled(true);
                     ui->connectButton->setEnabled(false);
                     ui->portList->setEnabled(false);
-                    ui->voltageChipButton->setEnabled(true);
+                    ui->eraseChipButton->setEnabled(true);
 
                     updateButtons(true, false);
                     return;
@@ -294,7 +296,7 @@ void MainWindow::updateButtons(bool actions, bool buffer)
         ui->verifyChipButton->setEnabled(false);
         ui->readChipButton->setEnabled(false);
     }
-    ui->voltageChipButton->setEnabled(actions);
+    ui->eraseChipButton->setEnabled(actions);
 
     if (buffer) {
         ui->saveFileButton->setEnabled(!bufferClear);
@@ -488,13 +490,13 @@ void MainWindow::on_openFileButton_clicked()
             .arg((double)fileData.size() / (1024.0 * 1024.0), 0, 'f', 2).arg(bufSize));
 
     switch (bufSize) {
-    case 0x00008000: ui->c16Button->setChecked(true); writeData("a"); break;    // 32 KB[cite: 1]
-    case 0x00080000: ui->c32Button->setChecked(true); writeData("b"); break;    // 512 KB[cite: 1]
-    case 0x00100000: ui->c64Button->setChecked(true); writeData("c"); break;    // 1 MB[cite: 1]
-    case 0x00200000: ui->c128Button->setChecked(true); writeData("d"); break;   // 2 MB[cite: 1]
-    case 0x00300000: ui->G3MbButton_2->setChecked(true); writeData("q"); break; // 3 MB[cite: 1]
-    case 0x00400000: ui->c256Button->setChecked(true); writeData("e"); break;   // 4 MB[cite: 1]
-    case 0x00800000: ui->c512Button->setChecked(true); writeData("f"); break;   // 8 MB[cite: 1]
+    case 0x00008000: ui->KB32Button->setChecked(true); writeData("a"); break;     // 32 KB[cite: 1]
+    case 0x00080000: ui->KB512Button->setChecked(true); writeData("b"); break;    // 512 KB[cite: 1]
+    case 0x00100000: ui->MB1Button->setChecked(true); writeData("c"); break;      // 1 MB[cite: 1]
+    case 0x00200000: ui->MB2Button->setChecked(true); writeData("d"); break;      // 2 MB[cite: 1]
+    case 0x00300000: ui->MB3Button->setChecked(true); writeData("q"); break;    // 3 MB[cite: 1]
+    case 0x00400000: ui->MB4Button->setChecked(true); writeData("e"); break;      // 4 MB[cite: 1]
+    case 0x00800000: ui->MB8Button->setChecked(true); writeData("f"); break;      // 8 MB[cite: 1]
     default:
         on_autoRomButton_clicked();
         ui->autoRomButton->setChecked(true);
@@ -654,68 +656,68 @@ void MainWindow::on_verifyChipButton_clicked()
     writeData("r");
 }
 
-void MainWindow::on_c16Button_clicked()
+void MainWindow::on_KB32Button_clicked()
 {
     ui->autoRomButton->setChecked(false);
-    log("Select 32Kb x08 ROM");
+    log("Selected: 32KB Test ROM.");
     bufSize = 0x00008000;
     writeData("a");
     emit chipUpdated();
 }
 
-void MainWindow::on_c32Button_clicked()
+void MainWindow::on_KB512Button_clicked()
 {
     ui->autoRomButton->setChecked(false);
-    log("Select 512KB x08 ROM");
+    log("Selected: 512KB x08 ROM");
     log("(MX29LV400BTC)");
     bufSize = 0x00080000;
     writeData("b");
     emit chipUpdated();
 }
 
-void MainWindow::on_c64Button_clicked()
+void MainWindow::on_MB1Button_clicked()
 {
     ui->autoRomButton->setChecked(false);
-    log("Select 1MB x08 ROM");
+    log("Selected: 1MB x08 ROM");
     log("(MX29LV800C,ES29LV800D,HY29F800TT(5V))");
     bufSize = 0x00100000;
     writeData("c");
     emit chipUpdated();
 }
 
-void MainWindow::on_c128Button_clicked()
+void MainWindow::on_MB2Button_clicked()
 {
     ui->autoRomButton->setChecked(false);
-    log("Select 2MB x08 ROM");
+    log("Selected: 2MB x08 ROM");
     log("(MX29LV160DT,M29W160ET,EN29LV160A,S29AL016M)");
     bufSize = 0x00200000;
     writeData("d");
     emit chipUpdated();
 }
 
-void MainWindow::on_G3MbButton_2_clicked()
+void MainWindow::on_MB3Button_clicked()
 {
     ui->autoRomButton->setChecked(false);
-    log("Select 3MB x08 ROM");
+    log("Selected: 3MB x08 ROM");
     bufSize = 0x00300000;
     writeData("q");
     emit chipUpdated();
 }
 
-void MainWindow::on_c256Button_clicked()
+void MainWindow::on_MB4Button_clicked()
 {
     ui->autoRomButton->setChecked(false);
-    log("Select 4MB x08 ROM");
+    log("Selected: 4MB x08 ROM");
     log("(MX29LV320E)");
     bufSize = 0x00400000;
     writeData("e");
     emit chipUpdated();
 }
 
-void MainWindow::on_c512Button_clicked()
+void MainWindow::on_MB8Button_clicked()
 {
     ui->autoRomButton->setChecked(false);
-    log("Select 8MB x08 ROM");
+    log("Selected: 8MB x08 ROM");
     log("(MX29LV640E)");
     bufSize = 0x00800000;
     writeData("f");
@@ -740,29 +742,29 @@ void MainWindow::on_autoRomButton_clicked()
 {
     log("Switched to Auto ROM size mode");
 
-    ui->c16Button->setAutoExclusive(false);
-    ui->c32Button->setAutoExclusive(false);
-    ui->c64Button->setAutoExclusive(false);
-    ui->c128Button->setAutoExclusive(false);
-    ui->G3MbButton_2->setAutoExclusive(false);
-    ui->c256Button->setAutoExclusive(false);
-    ui->c512Button->setAutoExclusive(false);
+    ui->KB32Button->setAutoExclusive(false);
+    ui->KB512Button->setAutoExclusive(false);
+    ui->MB1Button->setAutoExclusive(false);
+    ui->MB2Button->setAutoExclusive(false);
+    ui->MB3Button->setAutoExclusive(false);
+    ui->MB4Button->setAutoExclusive(false);
+    ui->MB8Button->setAutoExclusive(false);
 
-    ui->c16Button->setChecked(false);
-    ui->c32Button->setChecked(false);
-    ui->c64Button->setChecked(false);
-    ui->c128Button->setChecked(false);
-    ui->G3MbButton_2->setChecked(false);
-    ui->c256Button->setChecked(false);
-    ui->c512Button->setChecked(false);
+    ui->KB32Button->setChecked(false);
+    ui->KB512Button->setChecked(false);
+    ui->MB1Button->setChecked(false);
+    ui->MB2Button->setChecked(false);
+    ui->MB3Button->setChecked(false);
+    ui->MB4Button->setChecked(false);
+    ui->MB8Button->setChecked(false);
 
-    ui->c16Button->setAutoExclusive(true);
-    ui->c32Button->setAutoExclusive(true);
-    ui->c64Button->setAutoExclusive(true);
-    ui->c128Button->setAutoExclusive(true);
-    ui->G3MbButton_2->setAutoExclusive(true);
-    ui->c256Button->setAutoExclusive(true);
-    ui->c512Button->setAutoExclusive(true);
+    ui->KB32Button->setAutoExclusive(true);
+    ui->KB512Button->setAutoExclusive(true);
+    ui->MB1Button->setAutoExclusive(true);
+    ui->MB2Button->setAutoExclusive(true);
+    ui->MB3Button->setAutoExclusive(true);
+    ui->MB4Button->setAutoExclusive(true);
+    ui->MB8Button->setAutoExclusive(true);
 
     if (!bufWork.isEmpty()) {
         bufSize = static_cast<uint32_t>(bufWork.size());
@@ -772,7 +774,7 @@ void MainWindow::on_autoRomButton_clicked()
     emit chipUpdated();
 }
 
-void MainWindow::on_voltageChipButton_toggled(bool checked)
+void MainWindow::on_eraseChipButton_toggled(bool checked)
 {
     Q_UNUSED(checked);
     log("Erasing chip... Please wait.");
@@ -840,7 +842,7 @@ void MainWindow::on_progressBar_valueChanged(int value)
     Q_UNUSED(value);
 }
 
-void MainWindow::on_voltageChipButton_2_clicked()
+void MainWindow::on_eraseChipButton_2_clicked()
 {
     log("Unprotect chip...");
     writeData("h");
@@ -865,7 +867,7 @@ void MainWindow::on_aboutButton_clicked()
 {
     QMessageBox::about(this, tr("О программе"),
                        tr("<h3>16BitFlash Programmer</h3>"
-                          "<p><b>Версия:</b> 2.0.4</p>"
+                          "<p><b>Версия:</b> 3.0.0</p>"
                           "<p><b>Разработчик:</b> Pushkash<br>"
                           "<b>AI-ассистент:</b> Gemini</p>"
                           "<hr>"

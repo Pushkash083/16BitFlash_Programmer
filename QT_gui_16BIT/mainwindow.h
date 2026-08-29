@@ -114,18 +114,18 @@ private slots:
     void on_saveFileButton_clicked();
     void on_showButton_toggled(bool checked);
 
-    void on_c16Button_clicked();
-    void on_c32Button_clicked();
-    void on_c64Button_clicked();
-    void on_c128Button_clicked();
-    void on_G3MbButton_2_clicked();
-    void on_c256Button_clicked();
-    void on_c512Button_clicked();
+    void on_KB32Button_clicked();
+    void on_KB512Button_clicked();
+    void on_MB1Button_clicked();
+    void on_MB2Button_clicked();
+    void on_MB3Button_clicked();
+    void on_MB4Button_clicked();
+    void on_MB8Button_clicked();
     void on_autoRomButton_clicked();
     void sendAutoRomSize();
 
-    void on_voltageChipButton_toggled(bool checked);
-    void on_voltageChipButton_2_clicked();
+    void on_eraseChipButton_toggled(bool checked);
+    void on_eraseChipButton_2_clicked();
     void on_progressBar_valueChanged(int value);
 
     void reload_ports();
