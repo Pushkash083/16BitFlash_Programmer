@@ -92,8 +92,8 @@ Programator bazat pe microcontrollere **Raspberry Pi Pico (RP2040)** sau **Ardui
 ## 🛠 Hardware
 
 În repozitoriu sunt disponibile fișierele pentru asamblarea dispozitivului:
-* **[Schema programatorului (PDF)](Hardware/)** — Schema electrică principială a programatorului.
-* **[Gerber](Hardware)** — Fișiere Gerber gata pentru comanda fabricării plăcii de circuit (PCB).
+* **[Schema programatorului (PDF)](Hardware/v3.0.0/Schematic_ProgramatorLV_v3.0.0.pdf)** — Schema electrică principială a programatorului.
+* **[Gerber](Hardware/v3.0.0)** — Fișiere Gerber gata pentru comanda fabricării plăcii de circuit (PCB).
 
 ---
 
