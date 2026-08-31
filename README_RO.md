@@ -68,14 +68,14 @@ Programator bazat pe microcontrolere **Raspberry Pi Pico (RP2040)** sau **Arduin
 #### MCP23017 (Mod I2C)
 | Semnal MCP23017 | RP2040 (Pico) | Arduino Nano | Descriere |
 | :--- | :--- | :--- | :--- |
-| **SDA** | GP4 | A4 | Linie de date I2C |
-| **SCL** | GP5 | A5 | Linie de ceas I2C |
+| **SDA** | GP4 | A4 | I2C Data Line |
+| **SCL** | GP5 | A5 | I2C Clock Line |
 
 #### MCP23S17 (Mod SPI — Recomandat pentru v3.0.0)
 | Semnal MCP23S17 | RP2040 (Pico) | Arduino Nano | Descriere |
 | :--- | :--- | :--- | :--- |
 | **CS** | GP17 | D10 | Chip Select |
-| **SCK** | GP18 | D13 | Ceas SPI |
+| **SCK** | GP18 | D13 | SPI Clock |
 | **MOSI (SI)** | GP19 | D11 | Master Out Slave In |
 | **MISO (SO)** | GP16 | D12 | Master In Slave Out |
 
