@@ -6,18 +6,18 @@
 ![Platform](https://img.shields.io/badge/platform-RP2040%20%7C%20Arduino%20Nano%20%7C%20ESP8266%20%7C%20Qt%206-green)
 ![License](https://img.shields.io/badge/license-MIT-orange)
 
-> 💡 **Istoria proiectului:** Proiectul a fost conceput inițial ca un experiment simplu pentru a studia funcționarea portului COM, a protocolului UART și a transmiterii de date între PC și dispozitive externe, dar s-a transformat într-un programator în toată regula[cite: 1].
+> 💡 **Istoria proiectului:** Proiectul a fost conceput inițial ca un experiment simplu pentru a studia funcționarea portului COM, a protocolului UART și a transmiterii de date între PC și dispozitive externe, dar s-a transformat într-un programator în toată regula.
 
-Programator bazat pe microcontrolere **Raspberry Pi Pico (RP2040)** sau **Arduino Nano** și software de control în **Qt 6 C++** pentru citirea, scrierea, verificarea și Ștergerea cipului de memorie Flash pe 16 biți (seriile **MX29LV, AM29F, ES29LV, HY29F, S29AL, S29GL** etc.) și a cartușelor **SEGA Mega Drive / Genesis**[cite: 1].
+Programator bazat pe microcontrolere **Raspberry Pi Pico (RP2040)** sau **Arduino Nano** și software de control în **Qt 6 C++** pentru citirea, scrierea, verificarea și ștergerea cipului de memorie Flash pe 16 biți (seriile **MX29LV, AM29F, ES29LV, HY29F, S29AL, S29GL** etc.) și a cartușelor **SEGA Mega Drive / Genesis**.
 
 ---
 
 ## 🚀 Noutăți în versiunea v3.0.0
 
-* **Trecerea la RP2040 (Raspberry Pi Pico):** Microcontroler pe 32 de biți ARM Cortex-M0+[cite: 1].
-* **Actualizare software PC (Qt GUI):** În aplicația pentru desktop a fost adăugată suportul complet și optimizarea protocolului de transfer pentru microcontrolerul **RP2040**[cite: 1].
-* **Creșterea vitezei:** Timpul de scriere pentru **1 MB** s-a redus de la **~30 minute** (pe Arduino Nano) la **~5 minute** (pe RP2040)[cite: 1]. Scrierea dump-urilor mari de **15 MB** durează doar **~1 oră și 10 minute** în loc de **~8 ore și 20 de minute** (pe Arduino Nano)[cite: 1].
-* **Placă cu circuite imprimate actualizată (PCB v3.0.0):** Placă dublu strat cu amprentă dublă (Pico + Nano), indicatoare LED pentru operațiuni și suport pentru expansoare rapide **MCP23S17 (SPI)** / **MCP23017 (I2C)**[cite: 1].
+* **Trecerea la RP2040 (Raspberry Pi Pico):** Microcontroler pe 32 de biți ARM Cortex-M0+.
+* **Actualizare software PC (Qt GUI):** În aplicația pentru desktop a fost adăugată suportul complet și optimizarea protocolului de transfer pentru microcontrolerul **RP2040**.
+* **Creșterea vitezei:** Timpul de scriere pentru **1 MB** s-a redus de la **~30 minute** (pe Arduino Nano) la **~5 minute** (pe RP2040). Scrierea dump-urilor mari de **15 MB** durează doar **~1 oră și 10 minute** în loc de **~8 ore și 20 de minute** (pe Arduino Nano).
+* **Placă cu circuite imprimate actualizată (PCB v3.0.0):** Placă dublu strat cu amprentă dublă (Pico + Nano), indicatoare LED pentru operațiuni și suport pentru expansoare rapide **MCP23S17 (SPI)** / **MCP23017 (I2C)**.
 
 ---
 
@@ -25,21 +25,21 @@ Programator bazat pe microcontrolere **Raspberry Pi Pico (RP2040)** sau **Arduin
 
 ![Interface](Interface.png)
 
-* **Monitorizare:** Cronometru LCD pentru operațiuni și fereastră pentru jurnalul de consolă[cite: 1].
-* **Selectare capacitate:** Presetări de la 512 KB la 16 MB, `TEST 32KB` (verificare rapidă) și modul inteligent `Auto ROM Select`[cite: 1].
-* **Vizualizator Hex:** Vizualizare integrată a dump-urilor de memorie pe 16 coloane (`Show buffer`)[cite: 1].
-* **Operațiuni principale:** Citire, Scriere, Ștergere, Verificare[cite: 1].
+* **Monitorizare:** Cronometru LCD pentru operațiuni și fereastră pentru jurnalul de consolă.
+* **Selectare capacitate:** Presetări de la 512 KB la 16 MB, `TEST 32KB` (verificare rapidă) și modul inteligent `Auto ROM Select`.
+* **Vizualizator Hex:** Vizualizare integrată a dump-urilor de memorie pe 16 coloane (`Show buffer`).
+* **Operațiuni principale:** Citire, Scriere, Ștergere, Verificare.
 
 ---
 
 ## 🌟 Caracteristici cheie
 
-* **Auto ROM Select inteligent:** Detectează automat dimensiunea fișierului[cite: 1]. Dacă dimensiunea se potrivește cu una standard — selectează presetarea corespunzătoare; dacă nu — transmite microcontrolerului adresa finală exactă a fișierului de orice dimensiune[cite: 1]. Pentru lucrul cu capacități de peste 4 MB (8 MB și 16 MB) este necesară lipirea liniilor de adresă ale cipului de memorie $A21/A22$[cite: 1].
-* **Integrare hardware:** Magistrală de date pe 16 biți prin MCP23017 (I2C) / MCP23S17 (SPI), magistrală de adrese prin cascadă 74HC595[cite: 1].
-* **Byte Swapping bidirecțional:** Programatorul inversează automat baiții atât la citire, cât și la scriere[cite: 1]. Fișierele `.bin`, `.gen`, `.md` sunt gata de utilizare directă, fără utilitare terțe[cite: 1].
-* **Testare rapidă:** Modul `TEST 32KB` permite verificarea rapidă a unei părți din date și a funcționalității magistralei[cite: 1].
-* **Verificare dump:** Verificarea datelor după scriere[cite: 1].
-* **Protecția proceselor:** Blocarea modului Sleep al SO în timpul lucrului cu memorie Flash[cite: 1].
+* **Auto ROM Select inteligent:** Detectează automat dimensiunea fișierului, dacă dimensiunea se potrivește cu una standard — selectează presetarea corespunzătoare; dacă nu — transmite microcontrolerului adresa finală exactă a fișierului de orice dimensiune. Pentru lucrul cu capacități de peste 4 MB (8 MB și 16 MB) este necesară lipirea liniilor de adresă ale cipului de memorie $A21/A22$.
+* **Integrare hardware:** Magistrală de date pe 16 biți prin MCP23017 (I2C) / MCP23S17 (SPI), magistrală de adrese prin cascadă 74HC595.
+* **Byte Swapping bidirecțional:** Programatorul inversează automat baiții atât la citire, cât și la scriere. Fișierele `.bin`, `.gen`, `.md` sunt gata de utilizare directă, fără utilitare terțe.
+* **Testare rapidă:** Modul `TEST 32KB` permite verificarea rapidă a unei părți din date și a funcționalității magistralei.
+* **Verificare dump:** Verificarea datelor după scriere.
+* **Protecția proceselor:** Blocarea modului Sleep al SO în timpul lucrului cu memorie Flash.
 
 ---
 
@@ -83,26 +83,26 @@ Programator bazat pe microcontrolere **Raspberry Pi Pico (RP2040)** sau **Arduin
 
 ## 💾 Cipurile suportate
 
-* **Seria MX29LV / MX29F:** MX29LV400, MX29LV800, MX29LV160, MX29LV320, MX29LV640, MX29F1615 etc[cite: 1].
-* **Seria Spansion / Cypress:** S29AL016M, S29GL256S și similare[cite: 1].
-* **Seria AM29 / Altele:** AM29F800, ES29LV800D, HY29F800TT, M29W160ET, EN29LV160A[cite: 1].
+* **Seria MX29LV / MX29F:** MX29LV400, MX29LV800, MX29LV160, MX29LV320, MX29LV640, MX29F1615 etc.
+* **Seria Spansion / Cypress:** S29AL016M, S29GL256S și similare.
+* **Seria AM29 / Altele:** AM29F800, ES29LV800D, HY29F800TT, M29W160ET, EN29LV160A.
 
 ---
 
 ## 🛠 Hardware
 
 În depozit sunt prezentate fișierele pentru asamblarea independentă a dispozitivului:
-* **[ Schemă programator și Gerber:](Hardware/v3.0.0)** — Schema electrică de principiu a programatorului și fișierele Gerber gata pentru comanda de fabricare a plăcii cu circuite imprimate (PCB)[cite: 1].
+* **[ Schemă programator și Gerber:](Hardware/v3.0.0)** — Schema electrică de principiu a programatorului și fișierele Gerber gata pentru comanda de fabricare a plăcii cu circuite imprimate (PCB).
 
 ---
 
 ## 📦 Versiuni și Software
 
-* **Software pentru Windows:** În secțiunea **[Releases](../../releases/latest)** este disponibilă pentru descărcare aplicația de control în arhiva 16BitFlash_Programmer_v3.0.0.7z, precum și codul sursă al proiectului[cite: 1].
+* **Software pentru Windows:** În secțiunea **[Releases](../../releases/latest)** este disponibilă pentru descărcare aplicația de control în arhiva 16BitFlash_Programmer_v3.0.0.7z, precum și codul sursă al proiectului.
 
 ---
 
 ## 👨‍💻 Autori
 
-* **Dezvoltator:** Pushkash[cite: 1]
-* **Asistent AI:** Gemini[cite: 1]
+* **Dezvoltator:** Pushkash
+* **Asistent AI:** Gemini
