@@ -61,7 +61,7 @@ Programator bazat pe microcontrolere **Raspberry Pi Pico (RP2040)** sau **Arduin
 | **#OE** | B16 | GP9 | D9 | Output Enable (LOW) |
 | **#TIME** | B31 | GP21 | D5 | Rezervat |
 | **#LWR** | B28 | GP22 | D6 | Rezervat |
-| **#RST** | B27 | — | — | Linie de resetare (Reset) |
+| **#RST** | B27 | RUN | RESET | Linie de resetare (Reset) |
 
 ### 3. Magistrală de date (MCP23S17 / MCP23017)
 
