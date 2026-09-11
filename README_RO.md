@@ -2,7 +2,7 @@
 
 🌐 **Язык / Limbă:** [Русский](README.md) | Română
 
-![Version](https://img.shields.io/badge/version-3.0.0-blue)
+![Version](https://img.shields.io/badge/version-3.1.0-blue)
 ![Platform](https://img.shields.io/badge/platform-RP2040%20%7C%20Arduino%20Nano%20%7C%20ESP8266%20%7C%20Qt%206-green)
 ![License](https://img.shields.io/badge/license-MIT-orange)
 
@@ -12,12 +12,13 @@ Programator bazat pe microcontrolere **Raspberry Pi Pico (RP2040)** sau **Arduin
 
 ---
 
-## 🚀 Noutăți în versiunea v3.0.0
+## 🚀 Noutăți în versiunea v3.1.0
 
+* **Actualizare interfață software (Qt GUI):** Interfață de utilizator îmbunătățită, gestionare optimizată a dimensiunilor ROM printr-o listă derulantă (QComboBox) și fereastră de informații despre proiect actualizată.
 * **Trecerea la RP2040 (Raspberry Pi Pico):** Microcontroler pe 32 de biți ARM Cortex-M0+.
-* **Actualizare software PC (Qt GUI):** În aplicația pentru desktop a fost adăugată suportul complet și optimizarea protocolului de transfer pentru microcontrolerul **RP2040**.
-* **Creșterea vitezei:** Timpul de scriere pentru **1 MB** s-a redus de la **~30 minute** (pe Arduino Nano) la **~5 minute** (pe RP2040). Scrierea dump-urilor mari de **15 MB** durează doar **~1 oră și 10 minute** în loc de **~8 ore și 20 de minute** (pe Arduino Nano).
-* **Placă cu circuite imprimate actualizată (PCB v3.0.0):** Placă dublu strat cu amprentă dublă (Pico + Nano), indicatoare LED pentru operațiuni și suport pentru expansoare rapide **MCP23S17 (SPI)** / **MCP23017 (I2C)**.
+* **Optimizare protocol de transfer:** Aplicația pentru desktop este adaptată și optimizată pentru funcționarea la viteze mari cu **RP2040**.
+* **Creșterea vitezei:** Timpul de scriere pentru **1 MB** este de **~5 minute** (pe RP2040) față de **~30 minute** (pe Arduino Nano). Scrierea dump-urilor mari de **15 MB** durează doar **~1 oră și 10 minute** în loc de **~8 ore și 20 de minute**.
+* **Placă cu circuite imprimate (PCB v3.0.0):** Placă dublu strat cu amprentă dublă (Pico + Nano), indicatoare LED pentru operațiuni și suport pentru expansoare rapide **MCP23S17 (SPI)** / **MCP23017 (I2C)**.
 
 ---
 
@@ -71,7 +72,7 @@ Programator bazat pe microcontrolere **Raspberry Pi Pico (RP2040)** sau **Arduin
 | **SDA** | GP4 | A4 | I2C Data Line |
 | **SCL** | GP5 | A5 | I2C Clock Line |
 
-#### MCP23S17 (Mod SPI — Recomandat pentru v3.0.0)
+#### MCP23S17 (Mod SPI — Recomandat)
 | Semnal MCP23S17 | RP2040 (Pico) | Arduino Nano | Descriere |
 | :--- | :--- | :--- | :--- |
 | **CS** | GP17 | D10 | Chip Select |
@@ -92,13 +93,13 @@ Programator bazat pe microcontrolere **Raspberry Pi Pico (RP2040)** sau **Arduin
 ## 🛠 Hardware
 
 În depozit sunt prezentate fișierele pentru asamblarea independentă a dispozitivului:
-* **[ Schemă programator și Gerber:](Hardware/v3.0.0)** — Schema electrică de principiu a programatorului și fișierele Gerber gata pentru comanda de fabricare a plăcii cu circuite imprimate (PCB).
+* **[Schemă programator și Gerber:](Hardware/v3.0.0)** — Schema electrică de principiu a programatorului și fișierele Gerber gata pentru comanda de fabricare a plăcii cu circuite imprimate (PCB).
 
 ---
 
 ## 📦 Versiuni și Software
 
-* **Software pentru Windows:** În secțiunea **[Releases](../../releases/latest)** este disponibilă pentru descărcare aplicația de control în arhiva 16BitFlash_Programmer_v3.0.0.7z, precum și codul sursă al proiectului.
+* **Software pentru Windows:** În secțiunea **[Releases](../../releases/latest)** este disponibilă pentru descărcare aplicația de control în arhiva `16BitFlash_Programmer_v3.1.0.7z`, precum și codul sursă al proiectului.
 
 ---
 

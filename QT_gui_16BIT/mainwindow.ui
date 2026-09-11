@@ -36,9 +36,9 @@
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>10</y>
+      <y>20</y>
       <width>91</width>
-      <height>161</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="title">
@@ -50,126 +50,20 @@
     <property name="checkable">
      <bool>false</bool>
     </property>
-    <widget class="QRadioButton" name="KB32Button">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
+    <widget class="QComboBox" name="romComboBox">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
-       <width>81</width>
+       <y>20</y>
+       <width>69</width>
        <height>22</height>
       </rect>
      </property>
-     <property name="text">
-      <string>TEST32KB</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="autoRepeat">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="MB1Button">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>50</y>
-       <width>61</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>    1MB</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="MB2Button">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>70</y>
-       <width>61</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>    2MB</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="MB4Button">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>110</y>
-       <width>61</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>    4MB</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="MB8Button">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>130</y>
-       <width>61</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>    8MB</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="KB512Button">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>30</y>
-       <width>61</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string> 512KB</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="MB3Button">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>90</y>
-       <width>61</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>    3MB</string>
-     </property>
+     <item>
+      <property name="text">
+       <string>TEST32KB</string>
+      </property>
+     </item>
     </widget>
    </widget>
    <widget class="QPushButton" name="openFileButton">

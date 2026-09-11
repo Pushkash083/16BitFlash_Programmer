@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLCDNumber>
@@ -30,13 +31,7 @@ class Ui_MainWindow
 public:
     QWidget *centralWidget;
     QGroupBox *chipType;
-    QRadioButton *KB32Button;
-    QRadioButton *MB1Button;
-    QRadioButton *MB2Button;
-    QRadioButton *MB4Button;
-    QRadioButton *MB8Button;
-    QRadioButton *KB512Button;
-    QRadioButton *MB3Button;
+    QComboBox *romComboBox;
     QPushButton *openFileButton;
     QPushButton *saveFileButton;
     QPushButton *readChipButton;
@@ -72,40 +67,13 @@ public:
         centralWidget->setObjectName("centralWidget");
         chipType = new QGroupBox(centralWidget);
         chipType->setObjectName("chipType");
-        chipType->setGeometry(QRect(270, 10, 91, 161));
+        chipType->setGeometry(QRect(270, 20, 91, 51));
         chipType->setFlat(false);
         chipType->setCheckable(false);
-        KB32Button = new QRadioButton(chipType);
-        KB32Button->setObjectName("KB32Button");
-        KB32Button->setEnabled(false);
-        KB32Button->setGeometry(QRect(10, 10, 81, 22));
-        KB32Button->setCheckable(true);
-        KB32Button->setChecked(false);
-        KB32Button->setAutoRepeat(false);
-        MB1Button = new QRadioButton(chipType);
-        MB1Button->setObjectName("MB1Button");
-        MB1Button->setEnabled(false);
-        MB1Button->setGeometry(QRect(10, 50, 61, 22));
-        MB2Button = new QRadioButton(chipType);
-        MB2Button->setObjectName("MB2Button");
-        MB2Button->setEnabled(false);
-        MB2Button->setGeometry(QRect(10, 70, 61, 22));
-        MB4Button = new QRadioButton(chipType);
-        MB4Button->setObjectName("MB4Button");
-        MB4Button->setEnabled(false);
-        MB4Button->setGeometry(QRect(10, 110, 61, 22));
-        MB8Button = new QRadioButton(chipType);
-        MB8Button->setObjectName("MB8Button");
-        MB8Button->setEnabled(false);
-        MB8Button->setGeometry(QRect(10, 130, 61, 22));
-        KB512Button = new QRadioButton(chipType);
-        KB512Button->setObjectName("KB512Button");
-        KB512Button->setEnabled(false);
-        KB512Button->setGeometry(QRect(10, 30, 61, 22));
-        MB3Button = new QRadioButton(chipType);
-        MB3Button->setObjectName("MB3Button");
-        MB3Button->setEnabled(false);
-        MB3Button->setGeometry(QRect(10, 90, 61, 22));
+        romComboBox = new QComboBox(chipType);
+        romComboBox->addItem(QString());
+        romComboBox->setObjectName("romComboBox");
+        romComboBox->setGeometry(QRect(10, 20, 69, 22));
         openFileButton = new QPushButton(centralWidget);
         openFileButton->setObjectName("openFileButton");
         openFileButton->setEnabled(false);
@@ -208,13 +176,8 @@ public:
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "16BitFlash Programmer", nullptr));
         chipType->setTitle(QCoreApplication::translate("MainWindow", "         ROM", nullptr));
-        KB32Button->setText(QCoreApplication::translate("MainWindow", "TEST32KB", nullptr));
-        MB1Button->setText(QCoreApplication::translate("MainWindow", "    1MB", nullptr));
-        MB2Button->setText(QCoreApplication::translate("MainWindow", "    2MB", nullptr));
-        MB4Button->setText(QCoreApplication::translate("MainWindow", "    4MB", nullptr));
-        MB8Button->setText(QCoreApplication::translate("MainWindow", "    8MB", nullptr));
-        KB512Button->setText(QCoreApplication::translate("MainWindow", " 512KB", nullptr));
-        MB3Button->setText(QCoreApplication::translate("MainWindow", "    3MB", nullptr));
+        romComboBox->setItemText(0, QCoreApplication::translate("MainWindow", "TEST32KB", nullptr));
+
         openFileButton->setText(QCoreApplication::translate("MainWindow", "Open file", nullptr));
         saveFileButton->setText(QCoreApplication::translate("MainWindow", "Save file", nullptr));
         readChipButton->setText(QCoreApplication::translate("MainWindow", "Read", nullptr));

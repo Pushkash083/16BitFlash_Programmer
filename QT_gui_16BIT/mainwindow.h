@@ -114,13 +114,8 @@ private slots:
     void on_saveFileButton_clicked();
     void on_showButton_toggled(bool checked);
 
-    void on_KB32Button_clicked();
-    void on_KB512Button_clicked();
-    void on_MB1Button_clicked();
-    void on_MB2Button_clicked();
-    void on_MB3Button_clicked();
-    void on_MB4Button_clicked();
-    void on_MB8Button_clicked();
+    void on_romComboBox_currentIndexChanged(int index);
+
     void on_autoRomButton_clicked();
     void sendAutoRomSize();
 

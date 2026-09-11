@@ -39,3 +39,6 @@ win32:RC_FILE = icon.rc
 
 DISTFILES += \
     icon.rc
+
+RESOURCES += \
+    resources.qrc

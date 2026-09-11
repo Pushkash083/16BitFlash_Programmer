@@ -20,6 +20,25 @@ MainWindow::MainWindow(QWidget *parent) :
     serialPort(new QSerialPort(this))
 {
     ui->setupUi(this);
+
+    ui->romComboBox->clear();
+    ui->romComboBox->addItems({
+        "TEST32KB",
+        "512KB",
+        "1MB",
+        "2MB",
+        "4MB",
+        "8MB",
+        "16MB"
+        //, "32MB"
+    });
+    bufSize = 0x00008000;  // Устанавливаем стартовый размер вручную (32 KB):
+    ui->romComboBox->setCurrentIndex(0); // Выставляем 0-й индекс
+    // Заблокируем до подключения
+    ui->textBrowser->clear();
+    ui->romComboBox->setEnabled(false);
+    ui->autoRomButton->setEnabled(false);
+
     QFont font("Courier New", 10);
     ui->tableView->setFont(font);
     ui->tableView->horizontalHeader()->setFont(font);
@@ -77,46 +96,13 @@ void MainWindow::log(const QString &str)
 
 void MainWindow::chipSelectSetEnabled(bool state)
 {
-    ui->KB32Button->setEnabled(state);
-    ui->KB512Button->setEnabled(state);
-    ui->MB1Button->setEnabled(state);
-    ui->MB2Button->setEnabled(state);
-    ui->MB3Button->setEnabled(state);
-    ui->MB4Button->setEnabled(state);
-    ui->MB8Button->setEnabled(state);
+    ui->romComboBox->setEnabled(state);
     ui->autoRomButton->setEnabled(state);
-
-    ui->KB32Button->setAutoExclusive(state);
-    ui->KB512Button->setAutoExclusive(state);
-    ui->MB1Button->setAutoExclusive(state);
-    ui->MB2Button->setAutoExclusive(state);
-    ui->MB3Button->setAutoExclusive(state);
-    ui->MB4Button->setAutoExclusive(state);
-    ui->MB8Button->setAutoExclusive(state);
-    ui->autoRomButton->setAutoExclusive(state);
-
-    if (!state) {
-        ui->KB32Button->setChecked(false);
-        ui->KB512Button->setChecked(false);
-        ui->MB1Button->setChecked(false);
-        ui->MB2Button->setChecked(false);
-        ui->MB3Button->setChecked(false);
-        ui->MB4Button->setChecked(false);
-        ui->MB8Button->setChecked(false);
-        ui->autoRomButton->setChecked(false);
-    }
 }
 
 void MainWindow::chipSelectSetEnDes(bool state)
 {
-    ui->KB32Button->setEnabled(state);
-    ui->KB512Button->setEnabled(state);
-    ui->MB1Button->setEnabled(state);
-    ui->MB2Button->setEnabled(state);
-    ui->MB3Button->setEnabled(state);
-    ui->MB4Button->setEnabled(state);
-    ui->MB8Button->setEnabled(state);
-    ui->autoRomButton->setEnabled(state);
+    chipSelectSetEnabled(state);
 }
 
 void MainWindow::on_connectButton_clicked()
@@ -172,6 +158,9 @@ void MainWindow::openSerialPort(const QString &path)
                     ui->connectButton->setEnabled(false);
                     ui->portList->setEnabled(false);
                     ui->eraseChipButton->setEnabled(true);
+                    ui->readChipButton->setEnabled(true);
+
+                    writeData("a"); // Задаем начальный размер 32 KB на микроконтроллер, чтобы устройство точно знало текущий размер:
 
                     updateButtons(true, false);
                     return;
@@ -294,9 +283,10 @@ void MainWindow::updateButtons(bool actions, bool buffer)
     } else {
         ui->writeChipButton->setEnabled(false);
         ui->verifyChipButton->setEnabled(false);
-        ui->readChipButton->setEnabled(false);
+        ui->readChipButton->setEnabled(actions);
     }
     ui->eraseChipButton->setEnabled(actions);
+    ui->readChipButton->setEnabled(actions);
 
     if (buffer) {
         ui->saveFileButton->setEnabled(!bufferClear);
@@ -476,9 +466,12 @@ void MainWindow::on_openFileButton_clicked()
 
     QByteArray fileData = file.readAll();
 
-    if (fileData.size() > bufSize) {
-        bufSize = static_cast<uint32_t>(fileData.size());
-    }
+    // 1. Очищаем старые буферы, чтобы избавиться от хвостов предыдущего файла:
+    bufWork.clear();
+    bufCheck.clear();
+
+    // 2. Устанавливаем bufSize строго равным размеру нового открытого файла:
+    bufSize = static_cast<uint32_t>(fileData.size());
 
     bufWork.resize(static_cast<qsizetype>(bufSize));
     bufWork.fill(static_cast<char>(0xFF));
@@ -489,23 +482,43 @@ void MainWindow::on_openFileButton_clicked()
     log(QString("Read %1 MB. Total buffer size: %2 bytes")
             .arg((double)fileData.size() / (1024.0 * 1024.0), 0, 'f', 2).arg(bufSize));
 
+    ui->romComboBox->blockSignals(true);
+    while (ui->romComboBox->count() > 7) {
+        ui->romComboBox->removeItem(ui->romComboBox->count() - 1);
+    }
+
+    // 2. Блокируем отправку сигналов от ComboBox, чтобы он «просто показал» значение
+    ui->romComboBox->blockSignals(true);
+
     switch (bufSize) {
-    case 0x00008000: ui->KB32Button->setChecked(true); writeData("a"); break;     // 32 KB[cite: 1]
-    case 0x00080000: ui->KB512Button->setChecked(true); writeData("b"); break;    // 512 KB[cite: 1]
-    case 0x00100000: ui->MB1Button->setChecked(true); writeData("c"); break;      // 1 MB[cite: 1]
-    case 0x00200000: ui->MB2Button->setChecked(true); writeData("d"); break;      // 2 MB[cite: 1]
-    case 0x00300000: ui->MB3Button->setChecked(true); writeData("q"); break;    // 3 MB[cite: 1]
-    case 0x00400000: ui->MB4Button->setChecked(true); writeData("e"); break;      // 4 MB[cite: 1]
-    case 0x00800000: ui->MB8Button->setChecked(true); writeData("f"); break;      // 8 MB[cite: 1]
-    default:
-        on_autoRomButton_clicked();
+    case 0x00008000: ui->romComboBox->setCurrentIndex(0); break; // 32 KB
+    case 0x00080000: ui->romComboBox->setCurrentIndex(1); break; // 512 KB
+    case 0x00100000: ui->romComboBox->setCurrentIndex(2); break; // 1 MB
+    case 0x00200000: ui->romComboBox->setCurrentIndex(3); break; // 2 MB
+    //case 0x00300000: ui->romComboBox->setCurrentIndex(4); break; // 3 MB
+    case 0x00400000: ui->romComboBox->setCurrentIndex(4); break; // 4 MB
+    case 0x00800000: ui->romComboBox->setCurrentIndex(5); break; // 8 MB
+    case 0x01000000: ui->romComboBox->setCurrentIndex(6); break; // 16 MB (0x01000000)
+    //case 0x02000000: ui->romComboBox->setCurrentIndex(7); break; // 32 MB (0x02000000)
+
+    default: {
+        // Если размер нестандартный (например, 14.63 MB или 7.00 MB)
+        double sizeInMB = static_cast<double>(bufSize) / (1024.0 * 1024.0);
+        QString customSizeStr = QString("%1MB").arg(sizeInMB, 0, 'f', 2);
+
+        ui->romComboBox->addItem(customSizeStr);
+        ui->romComboBox->setCurrentIndex(ui->romComboBox->count() - 1);
+
+        // Включаем Auto ROM и отправляем размер пакетом 'z'
         ui->autoRomButton->setChecked(true);
-        log(QString("Auto ROM size mode enabled: %1MB (%2 bytes)")
-                .arg((double)bufSize / (1024.0 * 1024.0), 0, 'f', 2)
-                .arg(bufSize));
         sendAutoRomSize();
         break;
     }
+    }
+
+    // 3. Снимаем блокировку сигналов
+    ui->romComboBox->blockSignals(false);
+    sendAutoRomSize();
 
     chipSelected = true;
     bufCheck.resize(static_cast<qsizetype>(bufSize));
@@ -656,71 +669,63 @@ void MainWindow::on_verifyChipButton_clicked()
     writeData("r");
 }
 
-void MainWindow::on_KB32Button_clicked()
+void MainWindow::on_romComboBox_currentIndexChanged(int index)
 {
-    ui->autoRomButton->setChecked(false);
-    log("Selected: 32KB Test ROM.");
-    bufSize = 0x00008000;
-    writeData("a");
-    emit chipUpdated();
-}
+    // При выборе стандартных объемов (0..6) удаляем кастомный пункт
+    if (index >= 0 && index <= 6) {
+        ui->autoRomButton->setChecked(false);
 
-void MainWindow::on_KB512Button_clicked()
-{
-    ui->autoRomButton->setChecked(false);
-    log("Selected: 512KB x08 ROM");
-    log("(MX29LV400BTC)");
-    bufSize = 0x00080000;
-    writeData("b");
-    emit chipUpdated();
-}
+        ui->romComboBox->blockSignals(true);
+        while (ui->romComboBox->count() > 7) {
+            ui->romComboBox->removeItem(ui->romComboBox->count() - 1);
+        }
+        ui->romComboBox->blockSignals(false);
+    }
 
-void MainWindow::on_MB1Button_clicked()
-{
-    ui->autoRomButton->setChecked(false);
-    log("Selected: 1MB x08 ROM");
-    log("(MX29LV800C,ES29LV800D,HY29F800TT(5V))");
-    bufSize = 0x00100000;
-    writeData("c");
-    emit chipUpdated();
-}
+    switch (index) {
+    case 0: // TEST32KB
+        log("Selected: 32KB Test ROM.");
+        bufSize = 0x00008000;
+        break;
+    case 1: // 512KB
+        log("Selected: 512KB x08 ROM (MX29LV400BTC)");
+        bufSize = 0x00080000;
+        break;
+    case 2: // 1MB
+        log("Selected: 1MB x08 ROM (MX29LV800C, ES29LV800D, HY29F800TT)");
+        bufSize = 0x00100000;
+        break;
+    case 3: // 2MB
+        log("Selected: 2MB x08 ROM (MX29LV160DT, M29W160ET, EN29LV160A, S29AL016M)");
+        bufSize = 0x00200000;
+        break;
+    case 4: // 4MB
+        log("Selected: 4MB x08 ROM (MX29LV320E)");
+        bufSize = 0x00400000;
+        break;
+    case 5: // 8MB
+        log("Selected: 8MB x08 ROM (MX29LV640E)");
+        bufSize = 0x00800000;
+        break;
+    case 6: // 16MB
+        log("Selected: 16MB ROM");
+        bufSize = 0x01000000;
+        break;
 
-void MainWindow::on_MB2Button_clicked()
-{
-    ui->autoRomButton->setChecked(false);
-    log("Selected: 2MB x08 ROM");
-    log("(MX29LV160DT,M29W160ET,EN29LV160A,S29AL016M)");
-    bufSize = 0x00200000;
-    writeData("d");
-    emit chipUpdated();
-}
+    default: {
+        // Кастомный выбранный элемент (индекс 7)
+        ui->autoRomButton->setChecked(true);
+        if (!bufWork.isEmpty()) {
+            bufSize = static_cast<uint32_t>(bufWork.size());
+        }
+        log(QString("Selected Custom ROM: %1 MB (%2 bytes)")
+                .arg((double)bufSize / (1024.0 * 1024.0), 0, 'f', 2)
+                .arg(bufSize));
+        break;
+    }
+    }
 
-void MainWindow::on_MB3Button_clicked()
-{
-    ui->autoRomButton->setChecked(false);
-    log("Selected: 3MB x08 ROM");
-    bufSize = 0x00300000;
-    writeData("q");
-    emit chipUpdated();
-}
-
-void MainWindow::on_MB4Button_clicked()
-{
-    ui->autoRomButton->setChecked(false);
-    log("Selected: 4MB x08 ROM");
-    log("(MX29LV320E)");
-    bufSize = 0x00400000;
-    writeData("e");
-    emit chipUpdated();
-}
-
-void MainWindow::on_MB8Button_clicked()
-{
-    ui->autoRomButton->setChecked(false);
-    log("Selected: 8MB x08 ROM");
-    log("(MX29LV640E)");
-    bufSize = 0x00800000;
-    writeData("f");
+    sendAutoRomSize();
     emit chipUpdated();
 }
 
@@ -741,30 +746,6 @@ void MainWindow::sendAutoRomSize()
 void MainWindow::on_autoRomButton_clicked()
 {
     log("Switched to Auto ROM size mode");
-
-    ui->KB32Button->setAutoExclusive(false);
-    ui->KB512Button->setAutoExclusive(false);
-    ui->MB1Button->setAutoExclusive(false);
-    ui->MB2Button->setAutoExclusive(false);
-    ui->MB3Button->setAutoExclusive(false);
-    ui->MB4Button->setAutoExclusive(false);
-    ui->MB8Button->setAutoExclusive(false);
-
-    ui->KB32Button->setChecked(false);
-    ui->KB512Button->setChecked(false);
-    ui->MB1Button->setChecked(false);
-    ui->MB2Button->setChecked(false);
-    ui->MB3Button->setChecked(false);
-    ui->MB4Button->setChecked(false);
-    ui->MB8Button->setChecked(false);
-
-    ui->KB32Button->setAutoExclusive(true);
-    ui->KB512Button->setAutoExclusive(true);
-    ui->MB1Button->setAutoExclusive(true);
-    ui->MB2Button->setAutoExclusive(true);
-    ui->MB3Button->setAutoExclusive(true);
-    ui->MB4Button->setAutoExclusive(true);
-    ui->MB8Button->setAutoExclusive(true);
 
     if (!bufWork.isEmpty()) {
         bufSize = static_cast<uint32_t>(bufWork.size());
@@ -863,23 +844,53 @@ void MainWindow::allowSleep()
 #endif
 }
 
-void MainWindow::on_aboutButton_clicked()
-{
-    QMessageBox::about(this, tr("О программе"),
-                       tr("<h3>16BitFlash Programmer</h3>"
-                          "<p><b>Версия:</b> 3.0.0</p>"
-                          "<p><b>Разработчик:</b> Pushkash<br>"
-                          "<b>AI-ассистент:</b> Gemini</p>"
-                          "<hr>"
-                          "<p><b>Описание:</b><br>"
-                          "Программа предназначена для чтения, записи, проверки и стирания "
-                          "16-битных микросхем Flash-памяти (серии MX29LV.., AM29F.., ES29LV.., HY29F.., S29AL.. и др.) "
-                          "с помощью кастомного программатора на базе Arduino NANO.</p>"
-                          "<p><b>Назначение:</b><br>"
-                          "Разработано специально для работы с картриджами и ROM-файлами "
-                          "для игровой консоли SEGA Mega Drive / Genesis.</p>"
-                          "<hr>"
-                          "<p style='font-size: 11px; color: #555;'>"
-                          "<b>Примечание:</b> Для правильной работы устройства и связи с ПК "
-                          "в микроконтроллер Arduino NANO должен быть загружен специальный скетч (Firmware).</p>"));
+void MainWindow::on_aboutButton_clicked() {
+    // Вёрстка блока заголовка с помощью HTML-таблицы:
+    // Аватар слева, название и версия справа
+    QString aboutText = QString(
+        "<table>"
+        "<tr>"
+        "  <!-- Левая колонка: аватар -->"
+        "  <td style='padding-right: 15px; vertical-align: middle;'>"
+        "    <img src=':/icons/avatar.png' width='80' height='80' "
+        "         style='border-radius: 40px; border: 2px solid #333;'>"
+        "  </td>"
+
+        "  <!-- Правая колонка: Название, версия и авторы -->"
+        "  <td style='vertical-align: middle;'>"
+        "    <h3 style='margin: 0; padding: 0;'>16BitFlash Programmer</h3>"
+        "    <p style='margin: 4px 0;'><b>Версия:</b> 3.1.0</p>"
+        "    <p style='margin: 0; font-size: 12px; color: #444;'>"
+        "      <b>Разработчик:</b> Pushkash<br>"
+        "      <b>AI-ассистент:</b> Gemini"
+        "    </p>"
+        "  </td>"
+        "</tr>"
+        "</table>"
+
+        "<hr>"
+
+        // Описание и назначение
+        "<p><b>Описание:</b><br>"
+        "Программа предназначена для чтения, записи, проверки и стирания "
+        "16-битных микросхем Flash-памяти (серии MX29LV.., AM29F.., ES29LV.., HY29F.., S29AL.. и др.) "
+        "с помощью кастомного программатора на базе RP2040 / Arduino.</p>"
+
+        "<p><b>Назначение:</b><br>"
+        "Разработано специально для работы с картриджами и ROM-файлами "
+        "для игровой консоли SEGA Mega Drive / Genesis.</p>"
+
+        "<hr>"
+
+        // Примечание
+        "<p style='font-size: 11px; color: #555;'>"
+        "<b>Примечание:</b> Для правильной работы устройства и связи с ПК "
+        "в микроконтроллер должен быть загружен специальный скетч (Firmware).</p>"
+        );
+
+    QMessageBox aboutDlg(this);
+    aboutDlg.setWindowTitle(tr("О программе"));
+    aboutDlg.setIconPixmap(QPixmap(":/icons/icon.png").scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    aboutDlg.setText(aboutText);
+    aboutDlg.exec();
 }
