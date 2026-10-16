@@ -107,7 +107,7 @@ Programator bazat pe microcontrolere **Raspberry Pi Pico (RP2040)** sau **Arduin
 
 ## 📦 Versiuni și Software
 
-* **Software pentru Windows:** În secțiunea **[Releases](../../releases/latest)** este disponibilă pentru descărcare aplicația de control în arhiva `16BitFlash_Programmer_v3.1.1.7z`, precum și codul sursă al proiectului.
+* **Software pentru Windows:** În secțiunea **[Releases](../../releases/latest)** este disponibilă pentru descărcare aplicația de control în arhiva `16BitFlash_Programmer_v3.1.1.zip`, precum și codul sursă al proiectului.
 * **Prezentare video și demonstrație:** Puteți viziona procesul de lucru și exemplele de utilizare pe [YouTube (Demonstrație video)](https://youtu.be/o0FTJ8lp1q4).
 
 ---
