@@ -29,8 +29,8 @@ MainWindow::MainWindow(QWidget *parent) :
         "2MB",
         "4MB",
         "8MB",
-        "16MB"
-        //, "32MB"
+        "16MB",
+        "32MB"
     });
     bufSize = 0x00008000;  // Устанавливаем стартовый размер вручную (32 KB):
     ui->romComboBox->setCurrentIndex(0); // Выставляем 0-й индекс
@@ -483,7 +483,7 @@ void MainWindow::on_openFileButton_clicked()
             .arg((double)fileData.size() / (1024.0 * 1024.0), 0, 'f', 2).arg(bufSize));
 
     ui->romComboBox->blockSignals(true);
-    while (ui->romComboBox->count() > 7) {
+    while (ui->romComboBox->count() > 8) {
         ui->romComboBox->removeItem(ui->romComboBox->count() - 1);
     }
 
@@ -499,7 +499,7 @@ void MainWindow::on_openFileButton_clicked()
     case 0x00400000: ui->romComboBox->setCurrentIndex(4); break; // 4 MB
     case 0x00800000: ui->romComboBox->setCurrentIndex(5); break; // 8 MB
     case 0x01000000: ui->romComboBox->setCurrentIndex(6); break; // 16 MB (0x01000000)
-    //case 0x02000000: ui->romComboBox->setCurrentIndex(7); break; // 32 MB (0x02000000)
+    case 0x02000000: ui->romComboBox->setCurrentIndex(7); break; // 32 MB (0x02000000)
 
     default: {
         // Если размер нестандартный (например, 14.63 MB или 7.00 MB)
@@ -672,11 +672,11 @@ void MainWindow::on_verifyChipButton_clicked()
 void MainWindow::on_romComboBox_currentIndexChanged(int index)
 {
     // При выборе стандартных объемов (0..6) удаляем кастомный пункт
-    if (index >= 0 && index <= 6) {
+    if (index >= 0 && index <= 7) {
         ui->autoRomButton->setChecked(false);
 
         ui->romComboBox->blockSignals(true);
-        while (ui->romComboBox->count() > 7) {
+        while (ui->romComboBox->count() > 8) {
             ui->romComboBox->removeItem(ui->romComboBox->count() - 1);
         }
         ui->romComboBox->blockSignals(false);
@@ -710,6 +710,10 @@ void MainWindow::on_romComboBox_currentIndexChanged(int index)
     case 6: // 16MB
         log("Selected: 16MB ROM");
         bufSize = 0x01000000;
+        break;
+    case 7: // 32MB
+        log("Selected: 32MB ROM");
+        bufSize = 0x02000000;
         break;
 
     default: {
@@ -859,7 +863,7 @@ void MainWindow::on_aboutButton_clicked() {
         "  <!-- Правая колонка: Название, версия и авторы -->"
         "  <td style='vertical-align: middle;'>"
         "    <h3 style='margin: 0; padding: 0;'>16BitFlash Programmer</h3>"
-        "    <p style='margin: 4px 0;'><b>Версия:</b> 3.1.0</p>"
+        "    <p style='margin: 4px 0;'><b>Версия:</b> 3.1.1</p>"
         "    <p style='margin: 0; font-size: 12px; color: #444;'>"
         "      <b>Разработчик:</b> Pushkash<br>"
         "      <b>AI-ассистент:</b> Gemini"
