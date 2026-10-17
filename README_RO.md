@@ -2,7 +2,7 @@
 
 🌐 **Язык / Limbă:** [Русский](README.md) | Română
 
-![Version](https://img.shields.io/badge/version-3.1.0%2F3.1.1-blue)
+![Version](https://img.shields.io/badge/version-3.1.1-blue)
 ![Platform](https://img.shields.io/badge/platform-RP2040%20%7C%20Arduino%20Nano%20%7C%20Qt%206-green)
 ![License](https://img.shields.io/badge/license-MIT-orange)
 
@@ -12,7 +12,7 @@ Programator bazat pe microcontrolere **Raspberry Pi Pico (RP2040)** sau **Arduin
 
 ---
 
-## 🚀 Noutăți în versiunea v3.1.1
+## 🛠️ Noutăți în versiunea v3.1.1
 
 * **Qt 6 GUI:** Adăugată posibilitatea de selectare și lucru cu imagini ROM de până la 32 MB în interfața programului.
 * **Suport RP2040:** Adăugate noi schițe (firmware) pentru Raspberry Pi Pico cu suport pentru Sega Bank Switching (SSF2 Mapper).
@@ -20,7 +20,7 @@ Programator bazat pe microcontrolere **Raspberry Pi Pico (RP2040)** sau **Arduin
 
 ---
 
-## 🚀 Noutăți în versiunea v3.1.0
+## 🚀 Versiunea v3.1.0
 
 * **Actualizare interfață software (Qt GUI):** Interfață de utilizator îmbunătățită, gestionare optimizată a dimensiunilor ROM printr-o listă derulantă (QComboBox) și fereastră de informații despre proiect actualizată.
 * **Trecerea la RP2040 (Raspberry Pi Pico):** Microcontroler pe 32 de biți ARM Cortex-M0+.
