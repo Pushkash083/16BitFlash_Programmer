@@ -27,6 +27,13 @@ enum CheckStatus {
     NOT_WRITABLE = 2
 };
 
+struct FlashInfo {
+    QString name;
+    quint8 mfgId;
+    quint16 devId;
+    qint64 size;
+};
+
 class HexModel : public QAbstractTableModel {
     Q_OBJECT
     const QByteArray *buffer = nullptr;
@@ -100,6 +107,8 @@ signals:
     void bufferUpdated();
 
 private slots:
+    void on_detectButton_clicked();
+
     void updateProcessTimer();
     void handleSerialError(QSerialPort::SerialPortError error); // <--- Добавить этот слот
     void on_connectButton_clicked();
@@ -147,12 +156,16 @@ private:
     QMetaObject::Connection verifyDataConnection;
     QMetaObject::Connection updateBufConnection;
 
+    QList<FlashInfo> loadFlashDatabase();
+
     QByteArray bufWork;
     QByteArray bufCheck;
     uint32_t bufSize = 0;
 
     bool chipSelected = false;
     bool bufferClear = true;
+    bool detectButtonWasEnabled = false;
+    uint32_t detectedChipSize = 0;
 
     void preventSleep();
     void allowSleep();

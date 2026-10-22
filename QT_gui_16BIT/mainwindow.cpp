@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QSerialPort>
 #include <QSerialPortInfo>
@@ -129,6 +129,7 @@ void MainWindow::handleSerialError(QSerialPort::SerialPortError error)
     }
 }
 
+
 void MainWindow::openSerialPort(const QString &path)
 {
     ui->connectButton->setEnabled(false);
@@ -159,6 +160,8 @@ void MainWindow::openSerialPort(const QString &path)
                     ui->portList->setEnabled(false);
                     ui->eraseChipButton->setEnabled(true);
                     ui->readChipButton->setEnabled(true);
+                    ui->detectButton->setEnabled(true);  //on_detectButton_clicked()
+                    detectButtonWasEnabled = true;
 
                     writeData("a"); // Задаем начальный размер 32 KB на микроконтроллер, чтобы устройство точно знало текущий размер:
 
@@ -185,6 +188,7 @@ void MainWindow::closeSerialPort()
 {
     chipSelected = false;
     bufferClear = true;
+    detectedChipSize = 0; // Сбрасываем размер обнаруженного чипа при отключении!
 
     processTimer.stop();
     ui->lcdNumber->display("00:00:00");
@@ -192,8 +196,36 @@ void MainWindow::closeSerialPort()
     ui->progressBar->setRange(0, 100);
     ui->progressBar->setValue(0);
 
-    ui->portList->setEnabled(true);
+    // Сбрасываем информацию о чипе при отключении
+    ui->chipInfoLabel->setText("");
+    ui->sizeLabel->setText("");
+    ui->idLabel->setText("");
 
+    // --- Возвращаем romComboBox в исходное состояние (все 8 пресетов) ---
+    ui->romComboBox->blockSignals(true);
+    while (ui->romComboBox->count() > 8) {
+        ui->romComboBox->removeItem(ui->romComboBox->count() - 1);
+    }
+    // Если каких-то базовых пунктов вдруг не хватало, можно восстановить полный список:
+    if (ui->romComboBox->count() < 8) {
+        ui->romComboBox->clear();
+        ui->romComboBox->addItems({
+            "TEST32KB",
+            "512KB",
+            "1MB",
+            "2MB",
+            "4MB",
+            "8MB",
+            "16MB",
+            "32MB"
+        });
+    }
+    ui->romComboBox->setCurrentIndex(0);
+    ui->romComboBox->blockSignals(false);
+    // -----------------------------------------------------------------
+
+    ui->portList->setEnabled(true);
+    ui->detectButton->setEnabled(false);
     ui->disconnectButton->setEnabled(false);
     ui->connectButton->setEnabled(false);
     updatePortsTimer.start();
@@ -277,14 +309,30 @@ void MainWindow::updateButtons(bool actions, bool buffer)
     ui->disconnectButton->setEnabled(actions);
 
     if (actions) {
+        // Процесс ЗАВЕРШИЛСЯ. Возвращаем кнопки в рабочее состояние.
+
+        // Если чип уже был успешно опознан (detectedChipSize > 0),
+        // то кнопка Chip ID должна оставаться заблокированной!
+        if (detectedChipSize > 0) {
+            ui->detectButton->setEnabled(false);
+            detectButtonWasEnabled = false;
+        } else {
+            ui->detectButton->setEnabled(detectButtonWasEnabled);
+        }
+
         ui->writeChipButton->setEnabled(!bufferClear);
         ui->verifyChipButton->setEnabled(!bufferClear);
         ui->readChipButton->setEnabled(chipSelected);
     } else {
+        // Процесс НАЧАЛСЯ. Всё блокируем.
+        detectButtonWasEnabled = ui->detectButton->isEnabled();
+        ui->detectButton->setEnabled(false);
+
         ui->writeChipButton->setEnabled(false);
         ui->verifyChipButton->setEnabled(false);
         ui->readChipButton->setEnabled(actions);
     }
+
     ui->eraseChipButton->setEnabled(actions);
     ui->readChipButton->setEnabled(actions);
 
@@ -465,58 +513,86 @@ void MainWindow::on_openFileButton_clicked()
     }
 
     QByteArray fileData = file.readAll();
+    uint32_t fileSize = static_cast<uint32_t>(fileData.size());
 
-    // 1. Очищаем старые буферы, чтобы избавиться от хвостов предыдущего файла:
+    // Проверяем превышение размера относительно определенного чипа
+    if (detectedChipSize > 0 && fileSize > detectedChipSize) {
+        log(QString("<font color='#D32F2F'><b>Warning: File size (%1 MB) exceeds detected chip size (%2 MB)! Buffer truncated to chip size.</b></font>")
+                .arg((double)fileSize / (1024.0 * 1024.0), 0, 'f', 2)
+                .arg((double)detectedChipSize / (1024.0 * 1024.0), 0, 'f', 2));
+
+        // Принудительно ограничиваем буфер размером чипа, чтобы не выйти за рамки
+        bufSize = detectedChipSize;
+    } else {
+        // Если размер в пределах нормы (или чип еще не определялся кнопкой ID), берем размер файла
+        bufSize = fileSize;
+    }
+
+    // 1. Очищаем старые буферы
     bufWork.clear();
     bufCheck.clear();
-
-    // 2. Устанавливаем bufSize строго равным размеру нового открытого файла:
-    bufSize = static_cast<uint32_t>(fileData.size());
 
     bufWork.resize(static_cast<qsizetype>(bufSize));
     bufWork.fill(static_cast<char>(0xFF));
 
-    memcpy(bufWork.data(), fileData.constData(), fileData.size());
+    // Копируем в буфер только то количество байт, которое помещается в bufSize (если файл больше — он просто обрежется до размера чипа)
+    memcpy(bufWork.data(), fileData.constData(), qMin(static_cast<qint64>(bufSize), (qint64)fileData.size()));
 
     log(QString("Load from %1 file").arg(fileName));
     log(QString("Read %1 MB. Total buffer size: %2 bytes")
             .arg((double)fileData.size() / (1024.0 * 1024.0), 0, 'f', 2).arg(bufSize));
 
     ui->romComboBox->blockSignals(true);
-    while (ui->romComboBox->count() > 8) {
+
+    // Восстанавливаем базовый список по размеру чипа
+    const QList<quint32> standardSizes = {
+        0x00008000, 0x00080000, 0x00100000, 0x00200000,
+        0x00400000, 0x00800000, 0x01000000, 0x02000000
+    };
+
+    int baseCount = standardSizes.size();
+    if (detectedChipSize > 0) {
+        baseCount = 0;
+        for (int i = 0; i < standardSizes.size(); ++i) {
+            if (standardSizes[i] <= detectedChipSize) {
+                baseCount = i + 1;
+            }
+        }
+    }
+
+    while (ui->romComboBox->count() > baseCount) {
         ui->romComboBox->removeItem(ui->romComboBox->count() - 1);
     }
 
-    // 2. Блокируем отправку сигналов от ComboBox, чтобы он «просто показал» значение
-    ui->romComboBox->blockSignals(true);
+    // Если файл больше чипа, принудительно выбираем максимальный индекс чипа в комбобоксе
+    if (detectedChipSize > 0 && fileSize > detectedChipSize) {
+        ui->romComboBox->setCurrentIndex(baseCount - 1);
+    } else {
+        // Иначе ищем стандартный индекс или добавляем нестандартный, если он меньше/равен чипу
+        switch (bufSize) {
+        case 0x00008000: ui->romComboBox->setCurrentIndex(0); break;
+        case 0x00080000: ui->romComboBox->setCurrentIndex(1); break;
+        case 0x00100000: ui->romComboBox->setCurrentIndex(2); break;
+        case 0x00200000: ui->romComboBox->setCurrentIndex(3); break;
+        case 0x00400000: ui->romComboBox->setCurrentIndex(4); break;
+        case 0x00800000: ui->romComboBox->setCurrentIndex(5); break;
+        case 0x01000000: ui->romComboBox->setCurrentIndex(6); break;
+        case 0x02000000: ui->romComboBox->setCurrentIndex(7); break;
 
-    switch (bufSize) {
-    case 0x00008000: ui->romComboBox->setCurrentIndex(0); break; // 32 KB
-    case 0x00080000: ui->romComboBox->setCurrentIndex(1); break; // 512 KB
-    case 0x00100000: ui->romComboBox->setCurrentIndex(2); break; // 1 MB
-    case 0x00200000: ui->romComboBox->setCurrentIndex(3); break; // 2 MB
-    //case 0x00300000: ui->romComboBox->setCurrentIndex(4); break; // 3 MB
-    case 0x00400000: ui->romComboBox->setCurrentIndex(4); break; // 4 MB
-    case 0x00800000: ui->romComboBox->setCurrentIndex(5); break; // 8 MB
-    case 0x01000000: ui->romComboBox->setCurrentIndex(6); break; // 16 MB (0x01000000)
-    case 0x02000000: ui->romComboBox->setCurrentIndex(7); break; // 32 MB (0x02000000)
+        default: {
+            double sizeInMB = static_cast<double>(bufSize) / (1024.0 * 1024.0);
+            QString customSizeStr = QString("%1MB").arg(sizeInMB, 0, 'f', 2);
 
-    default: {
-        // Если размер нестандартный (например, 14.63 MB или 7.00 MB)
-        double sizeInMB = static_cast<double>(bufSize) / (1024.0 * 1024.0);
-        QString customSizeStr = QString("%1MB").arg(sizeInMB, 0, 'f', 2);
+            ui->romComboBox->addItem(customSizeStr);
+            ui->romComboBox->setCurrentIndex(ui->romComboBox->count() - 1);
 
-        ui->romComboBox->addItem(customSizeStr);
-        ui->romComboBox->setCurrentIndex(ui->romComboBox->count() - 1);
-
-        // Включаем Auto ROM и отправляем размер пакетом 'z'
-        ui->autoRomButton->setChecked(true);
-        sendAutoRomSize();
-        break;
+            ui->autoRomButton->setChecked(true);
+            sendAutoRomSize();
+            break;
+        }
+        }
     }
-    }
 
-    // 3. Снимаем блокировку сигналов
     ui->romComboBox->blockSignals(false);
     sendAutoRomSize();
 
@@ -762,27 +838,77 @@ void MainWindow::on_autoRomButton_clicked()
 void MainWindow::on_eraseChipButton_toggled(bool checked)
 {
     Q_UNUSED(checked);
+
+    if (!serialPort->isOpen()) {
+        log("Error: Serial port not open!");
+        return;
+    }
+
     log("Erasing chip... Please wait.");
 
     ui->lcdNumber->display("00:00:00");
     eraseTimer.start();
     processTimer.start(100);
 
-    writeData("g");
+    serialPort->clear(QSerialPort::AllDirections);
 
     updateButtons(false, false);
     chipSelectSetEnDes(false);
     preventSleep();
-
     ui->progressBar->setRange(0, 0);
 
-    QTimer::singleShot(90000, this, &MainWindow::finishErase);
+    // Создаем страховочный таймер в виде объекта, чтобы его можно было остановить
+    QTimer *safetyTimer = new QTimer(this);
+    safetyTimer->setSingleShot(true);
+
+    // 1. Настраиваем перехват ответа от Arduino
+    QMetaObject::Connection *conn = new QMetaObject::Connection();
+    *conn = connect(serialPort, &QSerialPort::readyRead, this, [this, safetyTimer, conn]() {
+        QByteArray eraseData = serialPort->readAll();
+
+        if (!eraseData.isEmpty()) {
+            // Отменяем страховочный таймер, раз ответ пришел вовремя!
+            safetyTimer->stop();
+            safetyTimer->deleteLater();
+
+            // Отключаем сигнал готовности
+            disconnect(*conn);
+            delete conn;
+
+            quint8 statusByte = static_cast<quint8>(eraseData[0]);
+
+            if (statusByte != 0xFF)
+            {
+
+             if (statusByte & 0x20)
+                {
+                log(QString("<font color='red'><b>Erase ERROR! Timeout / Flash worn out. Status: 0x%1</b></font>")
+                        .arg(statusByte, 2, 16, QChar('0')));
+                }else finishErase(); //вызывает finishErase и запускает верификацию
+
+            } else finishErase(); // Завершаем процесс (вызывает finishErase и запускает верификацию)
+
+        }
+    });
+
+    // 2. Настраиваем срабатывание страховочного таймера на 90 секунд
+    connect(safetyTimer, &QTimer::timeout, this, [this, conn]() {
+        disconnect(*conn);
+        delete conn;
+        log("<font color='red'><b>Erase ERROR: Timeout waiting for Arduino response!</b></font>");
+        finishErase();
+    });
+
+    safetyTimer->start(90000); // Запускаем 90 секунд
+
+    // 3. Отправляем команду на запуск стирания в Arduino
+    writeData("g");
 }
 
 void MainWindow::finishErase()
 {
     log("Erase cycle finished. Reading first 32 KB for blank check...");
-
+    serialPort->clear(QSerialPort::AllDirections);
     if (serialPort->isOpen()) {
         serialPort->readAll();
     }
@@ -848,6 +974,173 @@ void MainWindow::allowSleep()
 #endif
 }
 
+// Функция чтения текстовой базы данных чипов из файла chips.txt
+QList<FlashInfo> MainWindow::loadFlashDatabase() {
+    QList<FlashInfo> db;
+
+    QString filePath = QCoreApplication::applicationDirPath() + "/chips.txt";
+    QFile file(filePath);
+
+    // Если файла нет, создаем его автоматически и записываем шаблон
+    if (!file.exists()) {
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            QTextStream out(&file);
+            out << "# Format: Name,  Manufacturer_ID, Device_ID, SizeBytes(xMB*1024*1024)\n";
+            out << "S29GL128S,            0x01,         0x7E21,      16777216, #16MB\n";
+            out << "MX29LV320xT,          0xC2,         0xA7,         4194304, #4MB\n";
+            file.close();
+            log("<font color='#2E7D32'><b>chips.txt not found. Created default template automatically.</b></font>");
+        }
+    }
+
+    // Теперь штатно открываем файл для чтения
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        log("<font color='#9E7B05'><b>Warning: Could not open chips.txt! Auto-ID disabled.</b></font>");
+        return db;
+    }
+
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine().trimmed();
+        if (line.isEmpty() || line.startsWith('#'))
+            continue; // Пропускаем комментарии и пустые строки
+
+        QStringList parts = line.split(',');
+        if (parts.size() >= 4) {
+            FlashInfo info;
+            info.name = parts[0].trimmed();
+
+            bool ok1, ok2;
+            info.mfgId = parts[1].trimmed().toUInt(&ok1, 16);
+            info.devId = parts[2].trimmed().toUInt(&ok2, 16);
+            info.size = parts[3].trimmed().toLongLong();
+
+            if (ok1 && ok2) {
+                db.append(info);
+            }
+        }
+    }
+    file.close();
+    return db;
+}
+
+void MainWindow::on_detectButton_clicked()
+{
+    if (!serialPort->isOpen()) {
+        log("Error: Serial port not open!");
+        return;
+    }
+
+    log("Requesting Chip ID...");
+    serialPort->clear(QSerialPort::AllDirections);
+
+    // Запрос байтов ID у МК (теперь ждем 3 байта: 1 байт MID + 2 байта CID)
+    writeData("i");
+    QByteArray idData;
+    QElapsedTimer idTimer;
+    idTimer.start();
+
+    while (idTimer.elapsed() < 1000 && idData.size() < 3) {
+        if (serialPort->waitForReadyRead(100)) {
+            idData.append(serialPort->readAll());
+        }
+    }
+
+    if (idData.size() >= 3) {
+        quint8 mfgId = static_cast<quint8>(idData[0]);
+        // Собираем 16-битный CID из двух принятых байт (старший + младший)
+        quint16 devId = (static_cast<quint8>(idData[1]) << 8) | static_cast<quint8>(idData[2]);
+
+        // Формируем строки для лога и интерфейса
+        QString displayMidStr = QString("0x%1h").arg(QString::number(mfgId, 16).rightJustified(2, '0').toUpper());
+        QString logCidStr;
+        QString uiIdStr;
+
+        if (devId > 0x00FF) {
+            logCidStr = QString("0x%1h").arg(QString::number(devId, 16).rightJustified(4, '0').toUpper());
+            uiIdStr = QString("ID: 0x%1%2")
+                          .arg(QString::number(mfgId, 16).rightJustified(2, '0').toUpper())
+                          .arg(QString::number(devId, 16).rightJustified(4, '0').toUpper());
+        } else {
+            logCidStr = QString("0x%1h").arg(QString::number(devId, 16).rightJustified(2, '0').toUpper());
+            uiIdStr = QString("ID: 0x%1%2")
+                          .arg(QString::number(mfgId, 16).rightJustified(2, '0').toUpper())
+                          .arg(QString::number(devId, 16).rightJustified(2, '0').toUpper());
+        }
+
+        log(QString("MID: %1 | CID: %2").arg(displayMidStr, logCidStr));
+
+        // Загружаем базу из файла chips.txt (парсер devId уже настроен на quint16)
+        QList<FlashInfo> db = loadFlashDatabase();
+        bool found = false;
+        for (const auto &chip : db) {
+            // Прямое сопоставление (теперь поддерживает как 0x5B, так и 0x7E1A)
+            if (chip.mfgId == mfgId && chip.devId == devId) {
+                log(QString("<font color='#2E7D32'><b>Chip found: %1: %2Mb (%3MB)</b></font>")
+                        .arg(chip.name)
+                        .arg(((double)chip.size / (1024.0 * 1024.0))*8, 0, 'f', 0)
+                        .arg((double)chip.size / (1024.0 * 1024.0), 0, 'g', 4));
+
+                ui->chipInfoLabel->setText(QString("%1").arg(chip.name));
+
+                QString sizeMb = QString::number((double)chip.size / (1024.0 * 1024.0), 'g', 4) + "MB";
+                ui->sizeLabel->setText(sizeMb);
+
+                // В UI (метке) выводим красивый ID
+                ui->idLabel->setText(uiIdStr);
+
+                bufSize = chip.size;
+                detectedChipSize = chip.size; // Сохраняем размер определенного чипа
+                found = true;
+
+                // --- Динамическое ограничение ComboBox по размеру чипа (оставлено без изменений) ---
+                ui->romComboBox->blockSignals(true);
+
+                const QList<quint32> standardSizes = {
+                    0x00008000, 0x00080000, 0x00100000, 0x00200000,
+                    0x00400000, 0x00800000, 0x01000000, 0x02000000
+                };
+
+                int allowedCount = 0;
+                for (int i = 0; i < standardSizes.size(); ++i) {
+                    if (standardSizes[i] <= bufSize) {
+                        allowedCount = i + 1;
+                    }
+                }
+
+                while (ui->romComboBox->count() > allowedCount) {
+                    ui->romComboBox->removeItem(ui->romComboBox->count() - 1);
+                }
+
+                ui->romComboBox->setCurrentIndex(allowedCount - 1);
+                ui->romComboBox->blockSignals(false);
+                // ---------------------------------------------------------------------------------
+
+                break;
+            }
+        }
+
+        if (!found) {
+            log(QString("<font color='#9E7B05'><b>Unknown Chip ID. Try reading again or it is not in chips.txt.</b></font>"));
+            ui->chipInfoLabel->setText("Chip: Unknown");
+            ui->sizeLabel->setText("N/A");
+            ui->idLabel->setText(uiIdStr);
+
+            bufSize = 0x00008000; // по умолчанию 32 KB
+            ui->romComboBox->setCurrentIndex(0);
+        } else {
+            ui->detectButton->setEnabled(false);
+        }
+
+        // Отправляем реальный размер на микроконтроллер
+        sendAutoRomSize();
+        log("ROM size synchronized with MCU.");
+
+    } else {
+        log("Failed to receive Chip ID bytes.");
+    }
+}
+
 void MainWindow::on_aboutButton_clicked() {
     // Вёрстка блока заголовка с помощью HTML-таблицы:
     // Аватар слева, название и версия справа
@@ -863,7 +1156,7 @@ void MainWindow::on_aboutButton_clicked() {
         "  <!-- Правая колонка: Название, версия и авторы -->"
         "  <td style='vertical-align: middle;'>"
         "    <h3 style='margin: 0; padding: 0;'>16BitFlash Programmer</h3>"
-        "    <p style='margin: 4px 0;'><b>Версия:</b> 3.1.1</p>"
+        "    <p style='margin: 4px 0;'><b>Версия:</b> 4.3.0</p>"
         "    <p style='margin: 0; font-size: 12px; color: #444;'>"
         "      <b>Разработчик:</b> Pushkash<br>"
         "      <b>AI-ассистент:</b> Gemini"
@@ -877,8 +1170,8 @@ void MainWindow::on_aboutButton_clicked() {
         // Описание и назначение
         "<p><b>Описание:</b><br>"
         "Программа предназначена для чтения, записи, проверки и стирания "
-        "16-битных микросхем Flash-памяти (серии MX29LV.., AM29F.., ES29LV.., HY29F.., S29AL.. и др.) "
-        "с помощью кастомного программатора на базе RP2040 / Arduino.</p>"
+        "16-битных микросхем Flash-памяти (серии MX29LV..., AM29LV..., EN29LV..., S29GL... и др.)<br>"
+        "с помощью кастомного программатора на базе Raspberry Pi Pico или Arduino.</p>"
 
         "<p><b>Назначение:</b><br>"
         "Разработано специально для работы с картриджами и ROM-файлами "

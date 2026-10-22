@@ -314,7 +314,7 @@ debug/moc_mainwindow.cpp: mainwindow.h \
 		C:/Qt/6.5.0/mingw_64/include/QtGui/QColor \
 		debug/moc_predefs.h \
 		C:/Qt/6.5.0/mingw_64/bin/moc.exe
-	'C:\Qt\6.5.0\mingw_64\bin\moc.exe' $(DEFINES) --include 'D:/SEGA/PROcodeSketch/gui_16BIT — копия/debug/moc_predefs.h' -IC:/Qt/6.5.0/mingw_64/mkspecs/win32-g++ -I'D:/SEGA/PROcodeSketch/gui_16BIT — копия' -IC:/Qt/6.5.0/mingw_64/include -IC:/Qt/6.5.0/mingw_64/include/QtWidgets -IC:/Qt/6.5.0/mingw_64/include/QtGui -IC:/Qt/6.5.0/mingw_64/include/QtSerialPort -IC:/Qt/6.5.0/mingw_64/include/QtCore -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -IC:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include mainwindow.h -o debug/moc_mainwindow.cpp
+	'C:\Qt\6.5.0\mingw_64\bin\moc.exe' $(DEFINES) --include 'D:/SEGA/PROcodeSketch/gui_16BIT V4.0.0/debug/moc_predefs.h' -IC:/Qt/6.5.0/mingw_64/mkspecs/win32-g++ -I'D:/SEGA/PROcodeSketch/gui_16BIT V4.0.0' -IC:/Qt/6.5.0/mingw_64/include -IC:/Qt/6.5.0/mingw_64/include/QtWidgets -IC:/Qt/6.5.0/mingw_64/include/QtGui -IC:/Qt/6.5.0/mingw_64/include/QtSerialPort -IC:/Qt/6.5.0/mingw_64/include/QtCore -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -IC:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include mainwindow.h -o debug/moc_mainwindow.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -773,6 +773,10 @@ debug/mainwindow.o: mainwindow.cpp mainwindow.h \
 		C:/Qt/6.5.0/mingw_64/include/QtWidgets/qheaderview.h \
 		C:/Qt/6.5.0/mingw_64/include/QtWidgets/QLCDNumber \
 		C:/Qt/6.5.0/mingw_64/include/QtWidgets/qlcdnumber.h \
+		C:/Qt/6.5.0/mingw_64/include/QtWidgets/QLabel \
+		C:/Qt/6.5.0/mingw_64/include/QtWidgets/qlabel.h \
+		C:/Qt/6.5.0/mingw_64/include/QtGui/qpicture.h \
+		C:/Qt/6.5.0/mingw_64/include/QtGui/qtextdocument.h \
 		C:/Qt/6.5.0/mingw_64/include/QtWidgets/QListWidget \
 		C:/Qt/6.5.0/mingw_64/include/QtWidgets/QProgressBar \
 		C:/Qt/6.5.0/mingw_64/include/QtWidgets/qprogressbar.h \
@@ -786,7 +790,6 @@ debug/mainwindow.o: mainwindow.cpp mainwindow.h \
 		C:/Qt/6.5.0/mingw_64/include/QtWidgets/QTextBrowser \
 		C:/Qt/6.5.0/mingw_64/include/QtWidgets/qtextbrowser.h \
 		C:/Qt/6.5.0/mingw_64/include/QtWidgets/qtextedit.h \
-		C:/Qt/6.5.0/mingw_64/include/QtGui/qtextdocument.h \
 		C:/Qt/6.5.0/mingw_64/include/QtGui/qtextoption.h \
 		C:/Qt/6.5.0/mingw_64/include/QtGui/qtextcursor.h \
 		C:/Qt/6.5.0/mingw_64/include/QtGui/qtextformat.h \

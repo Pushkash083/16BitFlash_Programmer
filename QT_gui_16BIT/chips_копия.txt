@@ -1,0 +1,43 @@
+# Format: Name,  Manufacturer_ID, Device_ID, SizeBytes(xMB*1024*1024)
+NO or ERROR Chip,     0xFF,         0xFF,               0, #ERROR
+S29GL01GS,            0x01,         0x7E28,     134217728, #128MB
+S29GL512S,            0x01,         0x7E23,      67108864, #64MB
+S29GL256S,            0x01,         0x7E22,      33554432, #32MB
+S29GL128S,            0x01,         0x7E21,      16777216, #16MB
+S29GL064xV1,          0x01,         0x7E0C,       8388608, #8MB
+S29GL064xV3,          0x01,         0x7E10,       8388608, #8MB
+S29GL064xV6,          0x01,         0x7E13,       8388608, #8MB
+S29GL032xV1,          0x01,         0x7E1D,       4194304, #4MB
+S29GL032xV3,          0x01,         0x7E1A,       4194304, #4MB
+S29GL016AB,           0x01,         0x49,         2097152, #2MB
+S29GL016AT,           0x01,         0xC4,         2097152, #2MB
+AM29LV800BB,          0x01,         0x5B,         1048576, #1MB
+AM29LV800BT,          0x01,         0xDA,         1048576, #1MB
+MX29LV320xT,          0xC2,         0xA7,         4194304, #4MB
+MX29LV320xB,          0xC2,         0xA8,         4194304, #4MB 
+MX29LV640xT,          0xC2,         0xC9,         8388608, #8MB
+MX29LV640xB,          0xC2,         0xCB,         8388608, #8MB
+MX29LV160xT,          0xC2,         0xC4,         2097152, #2MB
+MX29LV160xB,          0xC2,         0x49,         2097152, #2MB
+MX29LV800BT,          0xC2,         0xDA,         1048576, #1MB
+MX29LV800BB,          0xC2,         0x5B,         1048576, #1MB
+MX29LV400T,           0xC2,         0xB9,          524288, #512KB
+MX29LV400B,           0xC2,         0xBA,          524288, #512KB
+M29W160ET,            0x20,         0xC4,         2097152, #2MB
+M29W160EB,            0x20,         0x49,         2097152, #2MB
+EN29LV160xT,          0x1C,         0xC4,         2097152, #2MB
+EN29LV160xB,          0x1C,         0x49,         2097152, #2MB
+ES29LV800xT,          0x4A,         0xDA,         1048576, #1MB
+ES29LV800xB,          0x4A,         0x5B,         1048576, #1MB
+HY29F800BT,           0xAD,         0xD6,         1048576, #1MB
+HY29F800BB,           0xAD,         0x58,         1048576, #1MB
+MBM29LV400TC,         0x04,         0x23,          524288, #512KB
+MBM29LV400TC,         0x04,         0xB9,          524288, #512KB
+MBM29LV400BC,         0x04,         0xBA,          524288, #512KB
+MBM29LV800TA,         0x04,         0xDA,         1048576, #1MB
+MBM29LV800BA,         0x04,         0x5B,         1048576, #1MB
+EN29LV800T,           0x1C,         0xDA,         1048576, #1MB
+EN29LV800B,           0x1C,         0x5B,         1048576, #1MB
+EN29LV800B_A,         0x7F,         0x5B,         1048576, #1MB
+EN29LV160B_A,         0x7F,         0xC4,         2097152, #2MB
+#Intel_28F800,        0x89,         0xC1,         1048576, #1MB ??

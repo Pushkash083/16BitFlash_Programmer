@@ -1,0 +1,43 @@
+//RP2040 + MCP23S17 (SPI)
+//Стандартная распиновка RP2040 (Default SPI0 / I2C0):
+//==Управление:
+//  WE = GP7
+//  CE = GP8
+//  OE = GP9
+//==74HC595 (Адрес): 
+//  DataPin =  GP2
+//  LatchPin = GP3
+//  ClockPin = GP6
+//==MCP23S17 (SPI):
+//->MISO = GP16
+//->CS =   GP17
+//->SCK =  GP18
+//->MOSI = GP19
+//==MCP23017 (I2C):
+//  SDA = GP4
+//  SCL = GP5
+
+// ==Arduino=======RP2040===========
+// =================================
+// A0  -> SER       //GP2
+// A1  -> L_CLK     //GP3
+// A2  -> S_CLK     //GP6
+//
+// A4  -> A4(SDA)   //GP4
+// A5  -> A5(SCL)   //GP5
+//
+// D13 -> SSCK      //GP18
+// D12 -> SMISO     //GP16
+// D11 -> SMOSI     //GP19
+// D10 -> SCS       //GP17
+//
+// D9  -> OE        //GP9
+// D8  -> CE        //GP8
+// A3  -> WE        //GP7
+//
+// D7  -> W/R (LED) //GP20
+// D5  -> TIME      //GP21
+// D6  -> LWR       //GP22
+//
+// RESET  -> RST    == RUN
+// =================================
