@@ -68,7 +68,7 @@ Version **v4.3.0** incorporates all thoroughly tested features from previous rel
 
 ## 🖥 Interface and Software Features (Qt GUI)
 
-![Interface](intercaece.png)
+![Interface](Interface.png)
 
 * **Monitoring:** LCD operation timer and console log window.
 * **Chip Information Card:** Information panel on the main screen showing the detected chip name, ID, and real memory size.
