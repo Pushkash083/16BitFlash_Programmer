@@ -68,7 +68,7 @@ Versiunea **v4.3.0** încorporează toate funcționalitățile testate din versi
 
 ## 🖥 Interfață și caracteristici software (Qt GUI)
 
-![Interface](intercaece.png)
+![Interface](Interface.png)
 
 * **Monitorizare:** Cronometru LCD pentru operațiuni și fereastră de jurnal pentru consolă.
 * **Cardul Chip Information:** Panou informativ pe ecranul principal care afișează numele cipului detectat, ID-ul și memoria reală.
